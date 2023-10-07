@@ -1,0 +1,21 @@
+---
+title: "Ditching point-and-click and diving into R"
+---
+
+Data analysis in biological and medical sciences was (and still is) dominated by the use of point-and-click tools, like Excel, Prism, SPSS etc. The reasons for this are that it is easy, it is visual, and gets you fast to an outcome. These point-and-click tools are convenient to use and their main asset is that you have a canvas or grid in front of you for dragging-dropping, copy-pasting, typing and calculating. For plotting data, you can choose formatting options by clicking on the features you want to change, again on a canvas that is in front of you on the screen. This canvas style of working is likely what is closest to our natural way of getting things done; putting stuff together with your hands and seeing directly what happens to the stuff is quick and actionable.
+
+The disadvantages of using point-and-click tools in biological and medical sciences are that point-and-click tools are not traceable and can be prone to mistakes. The sequence of clicks and manipulations that have been made to the data was not recorded, which makes the data wrangling process not traceable and proper version control does not exist. Also, you will always works within the limits of the tools that you are using, or how Bruno Rodrigues, the author of the free book [Building reproducible analytical pipelines with R](https://raps-with-r.dev/), phrased it "... point and click never allow you to go beyond what vendors think you need." [X-link](https://x.com/brodriguesco/status/1703325625384096025?s=20).
+
+Enter R! R is possibly the best, easiest and most accessible tool to use for biologist and like-minded scientists. R is part of or adopted more and more in scholarly programs at academic institutes not only for statistical use but also for other aspects of data science. Other tools like Python and Matlab are also widely used and they have similar benefits as R over point-and-click tools. Matlab however is proprietary software that needs high licence fees from institutions to be able to work with it.
+
+Here you will jump straight to using the `tidyverse` way of working <https://www.tidyverse.org/>. A complete (but extensive) overview of R data science can be found at <https://r4ds.hadley.nz/>. The "R for data science" resource also centers around the `tidyverse` and the `tidy` concept of data handling. Often data handling (organizing the data and tidying it to be able to use it in your downstream workflow) is describes as `data wrangling`. As mentioned in the `R for data science book`: "Together, tidying and transforming are called wrangling because getting your data in a form that's natural to work with often feels like a fight!" <https://r4ds.hadley.nz/intro>. With the `tidyverse` and some level of experience your fight will become less and less over time.
+
+Since the R community is huge, there is also an overwhelming number of resources (like books, tutorials, videos, blog posts, stack-exchange content) that all want to teach, educate and inform you about R in one way or the other. Also, there are again collections of R resources, and even collections of collections of R resources....
+
+These tutorials and courses have one thing in common, they start of with installing R and Rstudio and learning the software. How nice would it be if we can skip these (often) nasty installations? What if we can skip version updating and package installations and start working with your data right away? That would be amazing! And this is possible with the development of `webr` by George Stagg and colleagues <https://github.com/r-wasm/webr>.
+
+> It is R in the browser!
+
+This is so great, because it provides the most convenient, quick and easy way to enter the R world. It is just like you having your Excel, Word and Powerpoint always immediately up and running by a click of a button. Since with R we type in our commands instead of pointing and clicking we are in the era of type-and-click to get your data science done.
+
+This book is completely written using `quarto` and `webr` and allows you to typ in the code and run it right in the browser.

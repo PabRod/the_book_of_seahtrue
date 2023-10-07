@@ -1,9 +1,28 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
+This is the R Seahorse data analysis manual using functions from the Seahtrue package. Its purpose is to demonstrate and educate how to use R for Extracellular Flux analysis. A dedicated data analysis pipeline is used that allows for quality control and advanced plotting of the data.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+The manual is designed using a webr/wasm format, so that you can run R in your browser and do not need to install any R or Rstudio software on your computer.
 
-```{r}
-1 + 1
-```
+::: callout-note
+
+The manual is targeted to all levels of learning, meaning that also interested learners without any R background or programming knowledge can use this manual
+
+:::
+
+::: callout-tip
+To turn your `.asyr` Seahorse Wave file into an excel `.xlsx` file, you can use the Seahorse Wave desktop software or the Seahorse analytics website from Agilent:
+
+<https://seahorseanalytics.agilent.com>
+
+
+Lots of info regarding Seahorse analysis including how it works and how to run experiments is available from the Agilent website
+
+All things lab - How to run an assay:
+
+<https://www.agilent.com/en/product/cell-analysis/how-to-run-an-assay>
+
+All other Agilent Seahorse info:
+
+<https://www.agilent.com/en/products/cell-analysis/how-seahorse-xf-analyzers-work>
+:::
