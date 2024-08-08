@@ -1,0 +1,363 @@
+---
+title: "Seahtrue functions"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+
+---
+
+## Functions
+
+First, let's see what a `function` is in R. In the previous section, we used functions that changed our data, eg. `filter`, `select` and `clean_names`. Functions are just a bunch of code lines using any code and other functions you want to accomplish a task. Here are some formal definitions:
+
+> Functions are “self contained” modules of code that accomplish a specific task. Functions usually take in some sort of data structure (value, vector, dataframe etc.), process it, and return a result. [link](https://hbctraining.github.io/Intro-to-R/lessons/03_introR-functions-and-arguments.html)
+
+> A function in R is an object containing multiple interrelated statements that are run together in a predefined order every time the function is called. [link](https://www.dataquest.io/blog/write-functions-in-r/)
+
+Functions take `arguments`, these are used as input for your function.
+
+``` {webr-r}
+library(tidyverse)
+
+#make the function 
+change_mtcars_cyl_to_x <- function(x){
+  mtcars %>% 
+    mutate(cyl = x)
+  
+}
+
+#call the function
+change_mtcars_cyl_to_x(8)
+
+
+```
+
+Please note that it is good practice to use verbs in function names and address in the name what a function is doing. In our case we define a function `change_mtcars_cyl_to_x` because this is exactly what this function is doing. 
+
+ 
+
+::: callout-tip
+#### Exercise 1
+
+The `change_mtcars_cyl_to_x` function in the above code is a nonsensical function, because you never want to change a column to one specific value. Let alone a specific column named `cyl`. Also, you don't have to write a whole separate function for this, you can also directly use the `mutate` function from `dplyr`. Write the code without using the `change_mtcars_cyl_to_x` function, but achieve the same result.
+
+``` {webr-r}
+
+# use mtcars and mutate from dplyr
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 1
+
+``` {webr-r}
+
+mtcars %>%
+  mutate(cyl = 8)
+
+```
+
+Please note that you can change the data in a column to anything you want. R is very very flexible in datatypes (compared to other languages). So if you would do this:
+
+``` {webr-r}
+
+mtcars %>%
+  mutate(cyl = "eight")
+
+```
+
+that is also fine.
+
+The data types are given when you `glimpse` the data. 
+
+``` {webr-r}
+
+mtcars %>% glimpse()
+
+```
+
+You see that all columns are `<dbl>` which stands for `double`, which is a numeric data type. `integer` is another common numerical datatype.
+
+When you replace the `cyl` column data with `"eight"`, which is of the `character` type, the data type will change.
+
+``` {webr-r}
+
+mtcars %>%
+  mutate(cyl = "eight") %>%
+  glimpse()
+
+```
+
+This is all fine in R. **Important to note** though is that a column can have only one data type. In Excel you can define each cell a different data type, but in R that is not possible. So it is either a column of type `character` or `double` in our case.
+
+:::
+
+
+Now let's extend the function a bit to have two arguments:
+
+``` {webr-r}
+
+#make the function
+change_df_cyl_to_x <- function(df, x){
+  
+  df %>% 
+    mutate(cyl = x)
+  
+}
+
+#call the function
+change_df_cyl_to_x(mtcars, 7)
+
+#or call with pipe
+mtcars %>% change_df_cyl_to_x(7)
+
+#you can also see this as:
+mtcars %>% change_df_cyl_to_x(., 7)
+
+```
+
+Although the function is a bit more general, because we can now also input the tibble that we want to change, it is still not very useful in practice. A single `mutate` function is preferred to be used here. On the other hand it is an easy example to demonstrate what a function is and how it works.
+
+## Seahtrue read data function
+
+Now let's start with the functions from the `seahtrue` package. Since `seahtrue` is not available for webr, we need to load in the functions manually. The first thing we do is to read data from the excel file that is generated using the Wave software. In the previous section we only loaded in one sheet of that datafile `Rate`, but the `seahtrue` package takes all data and organizes it nicely (and tidyly) into a `nested tibble`.
+
+One of the functions is the `get_xf_raw`. It reads the Raw sheet from the excel file. 
+
+```{r}
+#| echo: true
+#| eval: false
+
+get_xf_raw <- function(fileName){
+  
+  xf_raw <- readxl::read_excel(fileName, sheet = "Raw")
+  
+}
+```
+
+The argument `fileName` and its location is important. If we work with data input for your scripts, you need to be precise where your files are located. On windows and mac computers and with cloud services and web apps, it can get confusion what this exact location is of your files, either locally or on network or cloud. Sometimes they are on the desktop or in a documents folder, or they can live on a network drive. Properly addressing these files can be difficult because the `full path` is not always known. It is often recommended to put data files in the Rstudio project folder that you work with, so that you can work with relative paths from your project root directory. This is another example of good practice.
+
+Using webr/wasm we do a similar thing, we download the file to our local drives. On my computer when I download a file it goes into the `/home/web_user/` directory. Apparently this is my working directory in my webr/wasm sessions. Since it is the working directory, everything that is in there is directly accessible with only the filename. You don't need a full path name like `C:\Users\MyName\Desktop\R\projects\blabla\datafolder\data\`. So for the `get_xf_raw` function to work we first download the file into our session working directory and then we call the `get_xf_raw` function.
+
+
+``` {webr-r}
+library(tidyverse)
+
+#set file source
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/main/inst/extdata/"
+
+#download file and rename to "VB.xlsx"
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    "20191219 SciRep PBMCs donor A.xlsx"), 
+  "VB.xlsx")
+
+#define the function
+get_xf_raw <- function(fileName){
+  
+  xf_raw <- readxl::read_xlsx(fileName, sheet = "Raw")
+  
+}
+
+#set the file name variable
+fileName <- "VB.xlsx"
+
+#read xlsx file
+xf<-get_xf_raw(fileName)
+
+#glimpse at the xf tibble
+xf %>% glimpse()
+```
+
+Please note that we also tell our session what the `get_xf_raw` function is here. Basically, we assign the code lines to `get_xf_raw`, so when we call `get_xf_raw` with its argument, these lines of code are run.
+
+::: {.callout-note collapse="true"}
+## using functions from packages
+
+In the `get_xf_raw` function we call the `read_xlsx` function. However, we also include the package from which the function is from, like this `readxl::read_xlsx`. This has two advantages. First, it is good practice to show where your function comes from, because sometimes a function name is used in mulitple different packages. For example, the `filter` function we often use is from `dplyr`, but the `stats` package also uses the `filter` function but then in a slightly different way. Second, when using the `package::function` annotation you don't have to load the package using the `library` command.
+
+In other languages, such as python, you are required to also include the library, when calling a function from that library <https://www.rebeccabarter.com/blog/2023-09-11-from_r_to_python>.
+
+:::
+
+Apart from reading the `Raw` data sheet there are a couple more functions to read the other data and meta info.
+
+``` {r}
+#| echo: true
+#| eval: false
+
+#raw data
+get_xf_raw()
+
+#rate data
+get_xf_rate()
+
+#normalization data
+get_xf_norm()
+
+#buffer factors
+get_xf_buffer()
+
+#injection info
+get_xf_inj()
+
+#pH calibration data
+get_xf_pHcal()
+
+#O2 calibration data
+get_xfO2cal()
+
+#flagged wells
+get_xf_flagged()
+
+#assay info
+get_xf_assayinfo()
+
+```
+
+
+Furthermore, there is a function that combines all functions as above and outputs them in a list:
+
+``` {r}
+#| echo: true
+#| eval: false
+
+#raw data
+read_xf_plate()
+
+```
+
+The input argument for all is the filename or path of the input xlsx data file.
+
+## Seahtrue preprocess data function
+
+Following reading the data, the data needs to be processed to a tidy format so that it can be easily used for downstream processing.
+
+For example, there is a function which changes the columns from the input file data into names without capitals and spaces. The `clean_names` from the janitor package can also be used, but in this case we wanted to be a bit more precise on what the names should be.
+
+``` {r}
+#| echo: true
+#| eval: false
+
+rename_columns <- function(xf_raw_pr) {
+
+  # change column names into terms without spaces
+  colnames(xf_raw_pr) <- c(
+    "measurement", "tick", "well", "group",
+    "time", "temp_well", "temp_env", "O2_isvalid", "O2_mmHg",
+    "O2_light", "O2_dark", "O2ref_light", "O2ref_dark",
+    "O2_em_corr", "pH_isvalid", "pH", "pH_light", "pH_dark",
+    "pHref_light",
+    "pHref_dark", "pH_em_corr", "interval"
+  )
+
+  return(xf_raw_pr)
+}
+
+```
+
+The next preprocessing function takes the `timestamp` (colnumn name is now `time`) from the `Raw` data sheet and converts the `timestamp` into minutes and seconds. This function has some more plines of code, but all it does is to add three columns to the tibble: `totalMinutes`, `minutes` and `timescale`. I used `timescale` here to make sure that I can recognize it as different from the `time` column.
+
+``` {r}
+#| echo: true
+#| eval: false
+
+convert_timestamp <- function(xf_raw_pr) {
+
+  # first make sure that the data is sorted correctly
+  xf_raw_pr <- dplyr::arrange(xf_raw_pr, tick, well)
+
+  # add three columns to df (totalMinutes, minutes and time) by converting the timestamp into seconds
+  xf_raw_pr$time <- as.character((xf_raw_pr$time))
+  times <- strsplit(xf_raw_pr$time, ":")
+  xf_raw_pr$totalMinutes <- sapply(times, function(x) {
+    x <- as.numeric(x)
+    x[1] * 60 + x[2] + x[3] / 60
+  })
+  xf_raw_pr$minutes <- xf_raw_pr$totalMinutes - xf_raw_pr$totalMinutes[1] # first row needs to be first timepoint!
+  xf_raw_pr$timescale <- round(xf_raw_pr$minutes * 60)
+
+  return(xf_raw_pr)
+}
+
+
+```
+
+
+All other preprocessing steps and functions can be looked up in the `preprocess_xfplate.R` file on github <https://github.com/vcjdeboer/seahtrue/blob/develop-gerwin/R/preprocess_xfplate.R>. Combined the `preprocess_xfplate` function takes the output of the `read_xfplate` function and outputs all data in a nice data table consisting of a bunch of nested tibbles.
+
+The `preprocess_xfplate` and `read_xfplate` functions are combined in the `run_seahtrue` function. The `seahtrue` has some extensive unit testing, user interaction, and input testing build-in using the `testthat`, `cli`, `logger` and `validate`.
+
+The basic read and prepocess function looks like this.
+
+``` {r}
+#| echo: true
+#| eval: false
+
+run_seahtrue() <- function(filepath_seahorse){
+  
+  filepath %>%
+    read_xfplate() %>%
+    preprocess_xfplate()
+}
+
+
+```
+
+In the next section we will explore the output of the `run_seahtrue` function.
+
+::: callout-tip
+#### Exercise 2
+
+The `rename_columns` function could have also been written using `clean_names` from the `janitor` package. This would have been likely faster to implement. Replace a `clean_names` code that does the same as the `rename_columns` function
+
+``` {webr-r}
+
+# 
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 2
+
+``` {webr-r}
+
+
+
+```
+
+
+
+
+:::
+
+
+::: callout-tip
+#### Exercise 3
+
+Do the same for the `convert_timestamp` function. Use the `lubridate` package to write a simpler code
+
+``` {webr-r}
+
+# 
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 3
+
+``` {webr-r}
+
+
+
+```
+
+
+
+:::

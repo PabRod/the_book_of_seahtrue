@@ -1,9 +1,5 @@
 ---
-title: Jump into the water
-editor: 
-  mode: source  
+title: "Swim underwater"
 ---
 
-In the section chapter, we jump into the water. We learn how to swim in R code and get ourselves familiar with using R for data handling and plotting. We will use first a dataset from R itself and secondly work with a Seahorse data file. There are exercises, with solutions, as well.
-
-
+Now we will go for a bit more than just swimming in R code. We will go underwater and swim in shallow water to look at those seahorses. In this section we will introduce functions from the `seahtrue` package and explore the output of `seahtrue` functions.

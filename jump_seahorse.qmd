@@ -1,0 +1,816 @@
+---
+title: "Plotting seahorse"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+---
+
+Now, lets plot some Seahorse data. For this we need to import some here into this session. We use a dataset that was we published in Scientific Reports [Janssen et al.](https://www.nature.com/articles/s41598-021-81217-4). It is data from PBMCs where we followed OCR and ECAR using Extracellular Flux analysis with the XFe96 over time and during that time we injected after three measurement phases FCCP, and after six measurement phases we injected Antimycin/Rotenone (AM/Rot). The data is available from [github](https://github.com/vcjdeboer/seahtrue/tree/main/inst/extdata).
+
+``` {webr-r}
+library(tidyverse)
+
+#set file source
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/main/inst/extdata/"
+
+#download file and rename to "VB.xlsx"
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    "20191219 SciRep PBMCs donor A.xlsx"), 
+  "VB.xlsx")
+
+#read xlsx file
+xf<-readxl::read_xlsx("VB.xlsx", sheet = "Rate")
+
+xf %>% glimpse()
+```
+
+As you can see from the `glimpse`, the data table that we have now (we call it a `tibble` in tidy lanuguage), contains 7 columns; `Measurement`, `Well`, `Group`, `Time`, `OCR`, `ECAR`, `PER`. The data is allready nice and tidyly organized in the Rate sheet of the excel file that we have loaded. The file was generated in the Wave Agilent software and directly comes from exporting the Seahorse data to xlsx.
+
+I prefer to use lower case column names without any spaces, so for these column names we have to turn them into lower case first. We use some easy functions from the `janitor` package for this.
+
+``` {webr-r}
+webr::install("janitor")
+xf %>% janitor::clean_names()
+```
+
+Next, we can start plotting data using ggplot. Let's introduce the `filter` command from `dplyr`. Whereas `select` is there to select columns, `filter` is there to select rows. So let's filter the rows for the group with is labeled "200.000" (200.000 cells/per well) and the "Background" group.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  glimpse()
+  
+```
+
+::: {.callout-note collapse="true"}
+## The filter command
+
+Filtering data is selecting the rows based on some arguments. You need some to understand some semnatics here. For filtering based on multiple conditions we use `group %in% c("200.000", "Background")`, for filtering based on a single condition we can use `group == "200.000"`. The `%in%` operator is used to match two items.
+
+```{r}
+
+1 %in% c(1,2,3,4,5) #is TRUE
+
+```
+
+```{r}
+# just like
+1 == 1 #is TRUE
+
+```
+
+```{r}
+#the reverse is also possible
+c(1,2,3,4,5) %in% 1
+#is TRUE FALSE FALSE FALSE FALSE FALSE
+
+```
+
+``` {webr-r}
+#Try the 1 = 1 here as well
+
+1 = 1
+
+#the = operator is reserved for assignment
+#just like the <- operator
+# == is used for comparison
+```
+
+``` {webr-r}
+
+#say that we have the following vector 
+#( = groups in experiment)
+group <- c("Background", "50.0000", 
+           "100.000", "150.000",
+           "200.000", "250.000", 
+           "300.000")
+
+#we can do the same without typing the
+#names by hand like this:
+group <- xf %>% 
+          pull(Group) %>% 
+          unique()
+
+#then
+
+c("200.000", "Background") %in% group
+
+#generates TRUE TRUE
+
+group %in% c("200.000", "Background")
+
+#generates:
+#TRUE FALSE FALSE FALSE TRUE FALSE FALSE
+```
+
+Thus the `group %in% c("200.000", "Background")` statement in the filter function above tells which group items to use. For `200.000` there is match (`TRUE`), but for `100.000` there is not a match (it is `FALSE`).
+:::
+
+Now that we know how to filter we can use the filtered data to make the ggplot.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr))+
+  geom_point()
+  
+```
+
+That plot is not so informative. Let's make it prettier. First, add a line plot:
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+  #the group command in aes is important for lines
+  #ggplot wants to know how to connect dots
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line()
+  
+```
+
+Next, change colors:
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")
+  
+```
+
+Change theme and text size:
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")+
+    theme_bw(base_size = 16)
+  
+```
+
+Add titles:
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+  
+```
+
+This is a very nice plot. It shows all OCR curve for each well for the `200.000` and the `background` groups. The information that is now not in the plot is which line matches to which well.
+
+Exercise We can color each line (but there are too many wells so it will not be nice!). \* Change this in the above code `color = well` instead of `color = group`. \* You will notice that there are not enough colors in the `brewer` palette `Set1`, so you go back to the default coloring by deleting the `scale_color_brewer` line as well. Use th `#` to comment out the line. \* Now notice that the legend is huge and not completely visible, againg indicating that this is not the way to go
+
+Instead, we can try to label the lines. The `ggrepel` package is not yet available in webr, so for now we have to use the `geom_text` or `annotate` commands from `ggplot`. The benefit of `ggrepel` is that it automatically prevents text overlap.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+          # here are the labels using geom_text
+     geom_text(data = . %>%
+                    filter(time == 
+                              max(time)) %>%
+                    filter(ocr  == 
+                              min(ocr)),
+               aes(label = well),
+               vjust = 2,
+               hjust = 1)+
+     geom_text(data = . %>%
+                    filter(between(time, 15, 20))%>%
+                    filter(ocr  == max(ocr)),
+               aes(label = well),
+               vjust = -0.3,
+               hjust = 1)+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+  
+```
+
+Although we now labeled lines that are at the minimum and maximum OCR, this is only usefull for this one plot in these conditions. The position of the label is tweaked based on this specific plot, making this not such a quick solution to our problem.
+
+
+
+::: {.callout-note collapse="true"}
+## Subsetting of data within the ggplot commands
+
+In the above ggplot commands, we included the `geom_text`, but we only used a subset of the full data for this geom. We use the `.` (dot) operator to get the original data (so in our case the filtered data that went into the ggplot), and piped that into another two filters. Basically we do the following, but then within one layer of the ggplot:
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  filter(time ==  max(time)) %>%
+  filter(ocr  == min(ocr))
+
+#and we also use the between function from dplyr
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  filter(between(time, 15, 20)) %>%
+  filter(ocr  == max(ocr))
+
+```
+
+Thus here we are filtering all the way to getting only one row of the full dataset. The `well` name "C08" or "B08" is then given to the `label` argument of `geom_text`.
+:::
+
+Let's do some more layout adjustments. Although the `theme_bw` gives a basic plotting layout, we often want to change the formatting. There are again great resources for this, for example this one: <https://ggplot2.tidyverse.org/articles/faq-customising.html>, but we explain the basics here. By giving options to the `theme` function we can change specific elements of a ggplot.
+
+For example, if we want to change the text size of the axis title (or leave it blank), we give arguments to the `axis.title` options. Also please note the `rel(1.2)` argument which means `relative 1.2 times higher than base_size`. I think it is good practive to use the `rel` here instead of absolute numbers.
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr))+
+  geom_point()+
+  labs(x = "time (min)",
+      y = "OCR (pmol/min)")+
+  theme_bw(base_size= 16)+
+  theme(
+    axis.title.x = element_blank(),
+    axis.title.y = element_text(size = rel(1.2))
+    
+  )
+
+```
+
+Change the rel `1.2` to `0.5` in the above code and see what happens.
+
+Next, we change the grid lines
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr))+
+  geom_point()+
+  labs(x = "time (min)",
+      y = "OCR (pmol/min)")+
+  theme_bw(base_size= 16)+
+  theme(
+    
+   panel.grid.minor = element_line(color  = "red"), 
+   panel.grid.major.x = element_line(color  = "blue"),
+
+  )
+
+```
+
+Next, we change the orientation of the x axis labels.
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>%
+  ggplot(aes(x = time, y = ocr))+
+  geom_point()+
+  labs(x = "time (min)",
+      y = "OCR (pmol/min)")+
+  theme_bw(base_size= 16)+
+  theme(
+    axis.text.x = element_text(
+      angle = 45, 
+      vjust = 1, # vertical alignment
+      hjust = 1, # horizontal alignment
+      size = rel(2))
+  )
+
+```
+
+
+We can also try to use the `ggiraph` package. This brings in some nice interactivity into the plot. Since we are now working with the plot in a browser, this can be very handy. Also if we want to publish the plot as html and not a plain PDF this can be usefull. `ggiraph` is unfortunately also not available for wasm/webr since one dependent package is not available `uuid`, and I also can't get it to run via quarto.....
+
+So let's try something else in a couple of exercises.
+
+::: callout-tip
+#### Exercise 1
+
+Add three vertical lines to the plot. You can use the `geom_vline` command with xintercepts set at 15, 33 and 48; so that the the line is approximately at the injection time point. Also give it a shade of grey, eg. `grey40`.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    # add code here
+  
+  
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 1
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+```
+:::
+
+::: callout-tip
+#### Exercise 2
+
+Now add the injection labels. Use the `annotate` command and
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    # example annotate
+    annotate("text", x = 0, y = 155, 
+              label = "init", color = "grey40", 
+              hjust = 1, vjust = -0.1,size = 4, angle = 90)+
+    # add other annotates here
+  
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 2
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(0,15,33,48),
+               color = "grey40")+
+    annotate("text", x = 0, y = 155, 
+              label = "init", color = "grey40", 
+             hjust = 1, vjust = -0.1,size = 4, angle = 90)+
+    annotate("text", x = 15, y = 155, 
+              label = "fccp", color = "grey40", 
+             hjust = 1, vjust = -0.1,size = 4, angle = 90)+
+    annotate("text", x = 33, y = 155, 
+              label = "am/rot", color = "grey40", 
+             hjust = 1, vjust = -0.1,size = 4, angle = 90)+
+    annotate("text", x = 48, y = 155, 
+              label = "monensin", color = "grey40", 
+             hjust = 1, vjust = -0.1,size = 4, angle = 90)+
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+```
+:::
+
+::: callout-tip
+#### Exercise 3
+
+Use the `facet_wrap` command to plot all groups (except background) in separate plots and in each plot show the wells. First, we will need to filter away the background data. Instead of selecting all groups we need it is better and easier to this filter our the background data using `filter(group != "Background")`. The `!=` means "is not" this is the reverse of the `==` operator.
+
+Next, add the `facet_wrap` command to the ggplot. I prefer to do that always at the bottom, so that I can easily see if a plot is wrapped.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  #change this line:
+  filter(group %in% c("200.000", "Background")) %>%
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+    #add facet wrap here 
+    #and do not forgot to add a "+" in previous line
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 3
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(0,15,33,48),
+               color = "grey40")+
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)+
+    facet_wrap(~group)
+```
+:::
+
+::: callout-tip
+#### Exercise 4
+
+The plot in exercise 3 looks great allready, but the order of the plots is important! We would like to see it go from low to high OCR. We can fix that using the `forcats` package commands. A nice and quick way to sort is based on the name of the group. Important to realize is that the `Group` column in the `XF` data are characters and not numbers. That is also the reason why that does not sort in the most natural way. It is sorted based on the first character, thus the "50.000" group comes last. If we would change the "group" column to `double` (that is a number format), it would sort better, but also your group name will change because it will recognize the `.` as a decimal operator. So it is better to leave the group names as they are and do it differently.
+
+In comes `forcats`, you can relevel and reorder the crap out of your data in the ggplot! We often do the releveling at the point where you use your parameter, without making any changes the type of the columns. So that means you can use `~fct_reorder(group, group)` in the `facet_wrap` instead of only `~group`.
+
+Please note that `fct_reorder` first argument is the parameter that you plot or need, and the second argument is the parameter that is used for sorting the data. In our case now that is the same, both are "group", but we also need to add something else. If we would do it like this there will be no difference from when ggplot takes facet_wrap only takes `~group`. Thus we can make the second argument into a number by using `as.double`.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)+
+    facet_wrap(~group)
+    #change the facet_wrap to 
+    #sort by number using fct_reorder and as.double
+```
+
+Also, try in the above code what happens if you: - only use `as.double` in the facet_wrap - change the type of data to `double` for the group column
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 4
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(0,15,33,48),
+               color = "grey40")+
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)+
+    facet_wrap(~fct_reorder(group, as.double(group)))
+
+```
+:::
+
+::: callout-tip
+#### Exercise 5
+
+Now that the `facet_wrap` is sorted nicely, we would also like to have the legend sorted nicely. Use the same `fct_reorder` trick to reorder the color legend.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+ #change here
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+    #take solution from previous exercise
+    #to have facet_wrap sorted here
+
+```
+
+If you didn't allready change the title of the legend, do that as well. You can specify the name of the legend manually using the `name` argument in the `scale_color_brewer` command.
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 5
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = fct_reorder(group, as.double(group))))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2",
+                        name = "group")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)+
+    facet_wrap(~fct_reorder(group, as.double(group)))
+
+```
+:::
+
+::: callout-tip
+#### Exercise 6
+
+Please change the `facet_wrap` command so that the y-axis is not fixed for all groups. Make the output so that each individual plot has its own y-axis scale.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = group))+ 
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16) 
+    #take solution from previous
+    #and adjust that facet_wrap
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 6
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  ggplot(aes(x = time, y = ocr,
+             group = well, 
+             color = fct_reorder(group, as.double(group))))+
+    geom_point()+
+    geom_line() +
+    geom_vline(xintercept = c(15,33,48) ,
+               color = "grey40")+ 
+    scale_color_brewer(palette = "Set2",
+                        name = "group")+
+    labs(subtitle = "OCR of increasing cell densities",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)+
+    facet_wrap(~fct_reorder(group, as.double(group)),
+               scales = "free_y")
+
+```
+:::
+
+::: callout-tip
+#### Exercise 7
+
+Now, it is up to you to build a whole ggplot using the XF data. Instead of plotting time vs OCR, now plot cell density vs maximal capacity. For this you need to know some stuff.
+
+1.  we define maximal capacity as the OCR at measurement 4
+2.  we should filter out the "Background" group
+3.  we should convert the group names to numbers
+4.  we can also add the mean of all wells for each group by using: `stat_summary()`
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names()
+  #filters and ggplot here
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 7
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  filter(measurement == 4) %>% 
+  ggplot(aes(x = as.double(group)*1000, y = ocr))+
+    geom_point()+
+    stat_summary(fun = "median", 
+      colour = "red", 
+        size = 16, 
+        shape = "-",
+      geom = "point")+
+    scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+    scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+    labs(subtitle = 
+           "Maximal capacity at different cell densities",
+         x = "cell density (#cells)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+
+```
+:::
+
+::: callout-tip
+#### Exercise 8
+
+The previous plot showed the data from individual wells as well as the median for that group. You can also calculate the `median` before plotting using the `dplyr` `summarize` command. You can find `summarize` info here: <https://dplyr.tidyverse.org/reference/summarise.html>
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names()
+  
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 8
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  filter(measurement == 4) %>% 
+  summarize(median = median(ocr), .by = group)%>%
+  ggplot(aes(x = as.double(group)*1000, y = median))+
+  geom_point()+
+  geom_line()+
+  labs(x = "cell density",
+        y = "OCR (pmol/min")+
+  theme_bw(base_size = 16)
+
+```
+:::
+
+::: callout-tip
+#### Exercise 9
+
+We can also perform a linear regression on the maximal capacity at different densities. For this we can use the `geom_smooth` command. The arguments should be `method = "lm"` and `formula = y~x`.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names()
+  #use your code from exercise 7
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 9
+
+``` {webr-r}
+xf %>% 
+  janitor::clean_names() %>%
+  filter(group != "Background") %>% 
+  filter(measurement == 4) %>% 
+  #filter(str_detect(well, "A|H")) %>%
+  ggplot(aes(x = as.double(group)*1000, y = ocr))+
+    geom_point()+
+    stat_summary(fun = "median", 
+      colour = "red", 
+        size = 16, 
+        shape = "-",
+      geom = "point")+
+    geom_smooth(method = "lm",
+                formula = y~x)+
+    scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+    scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+    labs(subtitle = 
+           "Maximal capacity at different cell densities",
+         x = "cell density (#cells per well)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+
+```
+
+Observe also what the difference is when only using the data from row A and H. You can uncomment the line in the above code. Please note I use the very usefull `str_detect` function for this from the `stringr` package that is also in the `tidyverse`.
+:::
+
+::: callout-tip
+#### Exercise 10
+
+Next, you can decide yourself what you want to plot. Have a `glimpse` at the data and think of another important visualisation that you want to make using all the tools that you have learned so far, or the tools that you found on the internet.
+
+``` {webr-r}
+
+xf %>% 
+  janitor::clean_names() %>%
+  glimpse()
+
+xf %>% 
+  janitor::clean_names() 
+
+```
+:::

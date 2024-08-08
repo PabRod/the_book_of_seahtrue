@@ -5,16 +5,13 @@ This is the R Seahorse data analysis manual using functions from the Seahtrue pa
 The manual is designed using a webr/wasm format, so that you can run R in your browser and do not need to install any R or Rstudio software on your computer.
 
 ::: callout-note
-
 The manual is targeted to all levels of learning, meaning that also interested learners without any R background or programming knowledge can use this manual
-
 :::
 
 ::: callout-tip
 To turn your `.asyr` Seahorse Wave file into an excel `.xlsx` file, you can use the Seahorse Wave desktop software or the Seahorse analytics website from Agilent:
 
 <https://seahorseanalytics.agilent.com>
-
 
 Lots of info regarding Seahorse analysis including how it works and how to run experiments is available from the Agilent website
 
@@ -26,3 +23,67 @@ All other Agilent Seahorse info:
 
 <https://www.agilent.com/en/products/cell-analysis/how-seahorse-xf-analyzers-work>
 :::
+
+## Resources
+
+### Free books
+
+[Telling Stories with data]{.underline}
+
+*Excellent very complete overview covering basic R coding, communicating science, and statistics* Good chapters for example:
+
+-   Clean and prepare <https://tellingstorieswithdata.com/09-clean_and_prepare.html>
+
+-   appendix 1: R essentials <https://tellingstorieswithdata.com/20-r_essentials.html>
+
+[R for data Science]{.underline}
+
+*The go-to book when you want to get familiar with R and tidy from Hadley Wickham and others from Posit* <https://r4ds.hadley.nz/>
+
+Nice ones for example:
+
+-   ggplot basics <https://r4ds.hadley.nz/data-visualize>
+
+-   lubridate date and time basics <https://r4ds.hadley.nz/datetimes>
+
+[Functional programming book]{.underline}
+
+*Nice visualizations of data structures and operations*
+
+-   vectors, lists, tibbles <https://dcl-prog.stanford.edu/data-structure-basics.html>
+
+-   map and purrr <https://dcl-prog.stanford.edu/purrr-basics.html>
+
+[Fundamentals of Data Visualization](https://clauswilke.com/dataviz/)
+
+*Everything you want to know about visualizing data using ggplot, with beautifull plots. Also, all code fully available on github*
+
+-   associations (scatter plots etc) <https://clauswilke.com/dataviz/visualizing-associations.html>
+
+-   uncertainty (error bars and distirbutions etc) <https://clauswilke.com/dataviz/visualizing-uncertainty.html>
+
+-   ggplot tutorial by Cedric Scherer
+<https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/>
+
+### Webr/WASM
+
+webr REPL - a full complete rstudio-like R environment in the browser <https://webr.r-wasm.org/latest/>
+
+Webr/wasm presentation bob rudis - (how I got interested in webr/wasm) - <https://www.youtube.com/watch?v=inpwcTUmBDY>
+
+Webr manual <https://docs.r-wasm.org/webr/latest/>
+
+Webr on github <https://github.com/r-wasm/webr/>
+
+### Other info
+
+Learn to purrr, Rebecca Barter - <https://www.rebeccabarter.com/blog/2019-08-19_purrr>
+
+### Movies:
+
+Purrr and map functions explained by Hadley - <https://www.youtube.com/watch?v=EGAs7zuRutY>
+
+
+## R fun
+
+<https://twitter.com/rafamoral/status/1571622591219236864?s=20&t=RJWOSe30-8bbDxgLIamRUQ>

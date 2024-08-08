@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: b6236f80-af8c-435e-b326-9ccc64848b0f
+      url: 'https://splendorous-otter-0d20bc.netlify.app'

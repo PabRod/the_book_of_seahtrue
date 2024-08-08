@@ -1,0 +1,4984 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The book of seahtrue - 11&nbsp; Running seahtrue functions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./surf.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/editor/editor.main.css">
+
+<style>
+  .monaco-editor pre {
+    background-color: unset !important;
+  }
+
+  .btn-webr {
+    background-color: #EEEEEE;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0; /* Extra styling for consistency */
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    -webkit-text-decoration: none;
+    -moz-text-decoration: none;
+    -ms-text-decoration: none;
+    -o-text-decoration: none;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    border-color: #dee2e6;
+    border: 1px solid rgba(0,0,0,0);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+
+  .btn-webr:hover {
+    color: #000;
+    background-color: #e3e6ea;
+    border-color: #e1e5e9;
+  }
+
+  .btn-webr:disabled,.btn-webr.disabled,fieldset:disabled .btn-webr {
+    pointer-events: none;
+    opacity: .65
+  }
+</style>
+
+<script type="module">
+
+  // Start a timer
+  const initializeWebRTimerStart = performance.now();
+
+  // Determine if we need to install R packages
+  var installRPackagesList = ['tidyverse'];
+  // Check to see if we have an empty array, if we do set to skip the installation.
+  var setupRPackages = !(installRPackagesList.indexOf("") !== -1);
+
+  // Display a startup message?
+  var showStartupMessage = true;
+  var showHeaderMessage = false;
+  if (showStartupMessage) {
+
+    // Create the outermost div element
+    var quartoTitleMeta = document.createElement("div");
+    quartoTitleMeta.classList.add("quarto-title-meta");
+
+    // Create the first inner div element
+    var firstInnerDiv = document.createElement("div");
+
+    // Create the second inner div element with "WebR Status" heading 
+    // and contents
+    var secondInnerDiv = document.createElement("div");
+    secondInnerDiv.classList.add("quarto-title-meta-heading");
+    secondInnerDiv.innerText = "WebR Status";
+
+    // Add another inner div
+    var secondInnerDivContents = document.createElement("div");
+    secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+    // Describe the WebR state
+    var startupMessageWebR = document.createElement("p");
+    startupMessageWebR.innerText = "🟡 Loading...";
+    startupMessageWebR.setAttribute("id", "startup");
+    // Add `aria-live` to auto-announce the startup status to screen readers
+    startupMessageWebR.setAttribute("aria-live", "assertive");
+
+    // Put everything together
+    secondInnerDivContents.appendChild(startupMessageWebR);
+
+    // Add a status indicator for COOP and COEP Headers
+    if (showHeaderMessage) {
+      var crossOriginMessage = document.createElement("p");
+      crossOriginMessage.innerText = `${crossOriginIsolated ? '🟢' : '🟡'} COOP & COEP Headers`;
+      crossOriginMessage.setAttribute("id", "coop-coep-header");
+      secondInnerDivContents.appendChild(crossOriginMessage);
+    }
+
+    firstInnerDiv.appendChild(secondInnerDiv);
+    firstInnerDiv.appendChild(secondInnerDivContents);
+    quartoTitleMeta.appendChild(firstInnerDiv);
+
+    // Add new element as last child in header element
+    var header = document.getElementById("title-block-header");
+
+    // Check if the header option is present or missing
+    if(header) {
+      // If present, directly append the child element.
+      header.appendChild(quartoTitleMeta);
+    } else {
+      // Attempt to place the new element inside a header _after_ the Monaco initialization
+      var monacoScript = document.getElementById("webr-monaco-editor-init");
+      var header = document.createElement("header");
+      header.setAttribute("id", "title-block-header");
+      // Now attempt to add the webR area to the title
+      header.appendChild(quartoTitleMeta);
+      // Include the header after the script tag
+      monacoScript.after(header);
+    }
+  }
+
+  // Retrieve the webr.mjs
+  import { WebR, ChannelType } from "https://webr.r-wasm.org/v0.2.1/webr.mjs";
+
+  // Populate WebR options with defaults or new values based on 
+  // webr meta
+  globalThis.webR = new WebR({
+    "baseURL": "",
+    "serviceWorkerUrl": "",
+    "homedir": "/home/web_user", 
+    "channelType": ChannelType.Automatic
+  });
+
+  // Initialization WebR
+  await globalThis.webR.init();
+
+  // Setup a shelter
+  globalThis.webRCodeShelter = await new globalThis.webR.Shelter();
+
+  // Installing Packages
+  if (showStartupMessage && setupRPackages) {
+    // If initialized, but we have packages to install switch status
+    startupMessageWebR.innerText = "🟡 Installing package dependencies..."
+    // Install packages
+    await globalThis.webR.installPackages(installRPackagesList)
+  }
+
+  // Switch to allowing code to be executed
+  document.querySelectorAll(".btn-webr").forEach((btn) => {
+    btn.innerText = "Run code";
+    btn.disabled = false;
+  });
+
+  // Stop timer
+  const initializeWebRTimerEnd = performance.now();
+
+  if (showStartupMessage) {
+    // If initialized, switch to a green light
+    startupMessageWebR.innerText = "🟢 Ready!"
+  }
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Running seahtrue functions</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">The book of seahtrue</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/vcjdeboer" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./jump.html" class="sidebar-item-text sidebar-link">Jump into the water</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jump_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ditching point-and-click and diving into R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jump_essentials.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Jumping essentials</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jump_cars.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jump_seahorse.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting seahorse</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./jump_summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./swim.html" class="sidebar-item-text sidebar-link">Swim underwater</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./swim_functions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seahtrue functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./swim_outputs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seahtrue outputs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./swim_summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./dive.html" class="sidebar-item-text sidebar-link">Diving deeper</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dive_alone.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Single experiment</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dive_together.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multiple experiments</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./surf.html" class="sidebar-item-text sidebar-link">Surfing the waves</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./surf_seahtrue.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Running seahtrue functions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#code" id="toc-code" class="nav-link active" data-scroll-target="#code"><span class="toc-section-number">11.1</span>  code</a>
+  <ul class="collapse">
+  <li><a href="#read_xf_plate" id="toc-read_xf_plate" class="nav-link" data-scroll-target="#read_xf_plate"><span class="toc-section-number">11.1.1</span>  read_xf_plate()</a></li>
+  <li><a href="#preprocess_xfplate" id="toc-preprocess_xfplate" class="nav-link" data-scroll-target="#preprocess_xfplate"><span class="toc-section-number">11.1.2</span>  preprocess_xfplate()</a></li>
+  <li><a href="#run_seahtrue" id="toc-run_seahtrue" class="nav-link" data-scroll-target="#run_seahtrue"><span class="toc-section-number">11.1.3</span>  run_seahtrue()</a></li>
+  </ul></li>
+  <li><a href="#run-it" id="toc-run-it" class="nav-link" data-scroll-target="#run-it"><span class="toc-section-number">11.2</span>  run it</a></li>
+  <li><a href="#bioenergetic-space-plot" id="toc-bioenergetic-space-plot" class="nav-link" data-scroll-target="#bioenergetic-space-plot"><span class="toc-section-number">11.3</span>  Bioenergetic space plot</a>
+  <ul class="collapse">
+  <li><a href="#buffering-power" id="toc-buffering-power" class="nav-link" data-scroll-target="#buffering-power"><span class="toc-section-number">11.3.1</span>  Buffering power</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations"><span class="toc-section-number">11.3.2</span>  Calculations</a></li>
+  <li><a href="#space-plot" id="toc-space-plot" class="nav-link" data-scroll-target="#space-plot"><span class="toc-section-number">11.3.3</span>  Space plot</a></li>
+  <li><a href="#gauge-plots" id="toc-gauge-plots" class="nav-link" data-scroll-target="#gauge-plots"><span class="toc-section-number">11.3.4</span>  Gauge plots</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/loader.js"></script>
+<script type="module" id="webr-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs'
+    }
+  });
+</script>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Running seahtrue functions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In this section we will work directly with the functions from the <code>seahtrue</code> package, since we didn’t make the package available via webr/wasm, we cannot do a library call to the <code>seahtrue</code> package. Instead we just load all three functions manually here in our session. The loading and running should go pretty fast!!</p>
+<section id="code" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="code"><span class="header-section-number">11.1</span> code</h2>
+<p>You can click on the <code>Run code</code> to get all functions into the memory of your session. Since R uses <code>lazy evaluation</code> what happens is that just a bunch a text is assigned to the function name and there is no evaluation of the code. That also means that it is quickly run. I have a small text output to see that indeed the code has been run.</p>
+<section id="read_xf_plate" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="read_xf_plate"><span class="header-section-number">11.1.1</span> read_xf_plate()</h3>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-1">Loading
+  webR...</button>
+<div id="webr-editor-1"></div>
+<div id="webr-code-output-1" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-1");
+  const outputDiv = document.getElementById("webr-code-output-1");
+  const editorDiv = document.getElementById("webr-editor-1");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+
+read_xfplate <- function(filepath_seahorse) {
+
+    # read data
+    xf_raw <- get_xf_raw(filepath_seahorse)
+    xf_rate <- get_xf_rate(filepath_seahorse) #outputs list of 2
+    xf_norm <- get_xf_norm(filepath_seahorse) #outputs list of 2
+    xf_buffer <- get_xf_buffer(filepath_seahorse)
+    xf_inj <- get_xf_inj(filepath_seahorse)
+    xf_pHcal <- get_xf_pHcal(filepath_seahorse)
+    xf_O2cal <- get_xf_O2cal(filepath_seahorse)
+    #xf_flagged <- get_xf_flagged(filepath_seahorse)
+    xf_assayinfo <- get_xf_assayinfo(filepath_seahorse,
+                                     norm_available = xf_norm[[2]],
+                                     xls_ocr_backgroundcorrected = xf_rate[[2]])
+    xf_norm <- xf_norm[[1]]
+    xf_rate <- xf_rate[[1]]
+
+    # make the output list
+    xf <- list(
+      raw = xf_raw,
+      rate = xf_rate,
+      assayinfo = xf_assayinfo,
+      inj = xf_inj,
+      pHcal = xf_pHcal,
+      O2cal = xf_O2cal,
+      norm = xf_norm,
+      flagged = "empty",
+      buffer = xf_buffer,
+      filepath_seahorse = filepath_seahorse
+    )
+
+    return(xf)
+
+}
+
+get_xf_raw <- function(filepath_seahorse){
+
+    xf_raw <- readxl::read_excel(filepath_seahorse,
+                         sheet = "Raw")
+}
+
+get_xf_norm <- function(filepath_seahorse){
+
+    norm_info <- get_platelayout_data(filepath_seahorse,
+                                      my_sheet = "Assay Configuration",
+                                      my_range = "B84:N92",
+                                      my_param = "cell_n")
+
+
+    if (sum(is.na(norm_info$cell_n)) >90){
+      norm_available <- FALSE
+    } else {
+      norm_available <- TRUE}
+
+    xf_norm <- list(norm_info, norm_available)
+
+    return(xf_norm)
+}
+
+get_originalRateTable <- function(filepath_seahorse){
+
+  original_rate_df <- readxl::read_excel(filepath_seahorse, sheet = "Rate")
+
+  # because rate data can be either background corrected or not this should be checked first
+  # first verify whether a "Background" group exists in the  original_rate_df
+
+  if ("Background" %in% {original_rate_df$Group %>% unique()}) {
+
+    check_background <- original_rate_df %>%
+      dplyr::filter(Group == "Background") %>%
+      dplyr::select(OCR) %>%
+      dplyr::reframe(mean = mean(OCR)) %>%
+      dplyr::pull(mean)
+
+    if (check_background == 0) {
+      corrected_allready <- TRUE
+    } else {
+      corrected_allready <-  FALSE
+    }
+
+  } else {
+
+    #in case when there is no Background group we work with the original data
+    # that is in the input file "Rate" sheet
+    # please note that there will be warning logged, but the columns will be
+    # labeled incorrectly as if the data is background corrected
+
+    corrected_allready <-  TRUE
+
+  }
+
+  if (corrected_allready == TRUE){
+    colnames(original_rate_df) <-
+      c("measurement","well", "group",
+        "time_wave", "OCR_wave_bc",
+        "ECAR_wave_bc", "PER_wave_bc")
+    original_rate_df <- original_rate_df %>%
+      dplyr::mutate(OCR_wave = 0, ECAR_wave = 0)
+
+    original_rate_df <- original_rate_df %>%
+      dplyr::select(measurement, well, group,
+                    time_wave, OCR_wave, OCR_wave_bc,
+                    ECAR_wave, ECAR_wave_bc)
+
+  } else{
+    colnames(original_rate_df) <-
+      c("measurement","well", "group",
+        "time_wave", "OCR_wave",
+        "ECAR_wave", "PER_wave")
+
+    #do background substraction forr wave table
+    background <- original_rate_df %>%
+      dplyr::filter(group=="Background") %>%
+      dplyr::group_by(measurement) %>%
+      dplyr::reframe(bkg_OCR_wave = mean(OCR_wave),
+                       bkg_ECAR_wave = mean(ECAR_wave)
+      )
+    original_rate_df <- dplyr::left_join(original_rate_df,
+                                         background,
+                                         by = c("measurement"), copy = TRUE)
+
+    original_rate_df$OCR_wave_bc <- original_rate_df$OCR_wave - original_rate_df$bkg_OCR_wave
+    original_rate_df$ECAR_wave_bc <- original_rate_df$ECAR_wave - original_rate_df$bkg_ECAR_wave
+
+    original_rate_df <- original_rate_df %>%
+      dplyr::select(measurement, well, group,
+                    time_wave, OCR_wave, OCR_wave_bc,
+                    ECAR_wave, ECAR_wave_bc)
+  }
+
+  original_rate_df_list <- list(original_rate_df, corrected_allready)
+
+  return(original_rate_df_list)
+
+}
+
+get_xf_rate <- function(filepath_seahorse){
+    
+  #first item is table, second item is background_corrected logical
+    xf_rate_list <- get_originalRateTable(filepath_seahorse)
+
+    return(xf_rate_list)
+}
+
+get_xf_buffer <- function(filepath_seahorse){
+
+    bufferfactor_info <- get_platelayout_data(filepath_seahorse,
+                                              my_sheet = "Assay Configuration",
+                                              my_range = "B96:N104",
+                                              my_param = "bufferfactor")
+
+    return(bufferfactor_info)
+
+}
+
+get_xf_pHcal <- function(filepath_seahorse){
+
+  pH_calibration <- get_platelayout_data(filepath_seahorse,
+                                         my_sheet = "Calibration",
+                                         my_range = "P16:AB24",
+                                         my_param = "pH_cal_em")
+
+  return(pH_calibration)
+}
+
+get_xf_O2cal <- function(filepath_seahorse){
+
+
+  O2_calibration <- get_platelayout_data(filepath_seahorse,
+                                         my_sheet = "Calibration",
+                                         my_range = "B7:N15",
+                                         my_param = "O2_cal_em")
+
+
+  return(O2_calibration)
+}
+
+get_xf_inj <- function(filepath_seahorse, injscheme = "HAP"){
+
+
+  #command_index in "Operation Log" sheet give numbers to the phases in a seahorse exp
+  # each command (eg. "mix", "measure") gets the command_index for that phase
+  # 0 = moving operation
+  # 1 = calibration
+  # 2 = baseline
+  # 3 = injection 1
+  # 4 = injection 2
+  # 5 = injection 3
+  # 6 = injection 4
+
+  #read injection strategy and measurements from "Operation Log" sheet
+  info_sh<-readxl::read_excel(filepath_seahorse, sheet = "Operation Log")
+  colnames(info_sh) <- c("instruction_name","command_name",
+                         "command_index","start_time","end_time",
+                         "completion_status")
+
+  if (injscheme == "HAP"){
+    #assumes injection names are available in operation log file (this is the case for most experiments)
+    measurement_info <- dplyr::filter(info_sh, command_name == "Measure")
+    measurement_info$interval <- measurement_info$command_index -1
+    measurement_info$measurement <- 1:nrow(measurement_info)
+    measurement_info <- measurement_info %>% dplyr::select(measurement, interval, injection=instruction_name)
+  }
+
+  if (injscheme == "manual"){
+
+    #in case there is no command index in "opertion log"
+    command_names <- c("XF - PC_Measure", "XF - PC_Inject")
+    measurement_info <- dplyr::filter(info_sh, command_name %in% command_names)
+
+    # "PC - inject" has a number as command_index
+    # "PC - measure" command_index == 0
+    # I use that to set the command_index
+    interval = 1
+    for (i in 1:nrow(measurement_info)){
+      if(measurement_info$command_index[i] == 0){
+        measurement_info$command_index[i] <-  interval } else {
+          interval <-  interval +1
+          measurement_info$command_index[i] <-  interval}
+    }
+    colnames(measurement_info)[3] <- "interval"
+    measurement_info <- dplyr::filter(measurement_info, command_name == "XF - PC_Measure")
+    measurement_info$measurement <- 1:nrow(measurement_info)
+    measurement_info <- measurement_info %>% dplyr::select(measurement, interval)
+
+    #gives name of the injection manually
+    # case mitostress
+    injections <- c("basal", "OM", "FCCP", "AM/rot")
+    injections_mitostress <- tibble::tibble(interval = 1:4, injection=c("basal", "OM", "FCCP", "AM/rot"))
+    measurement_info <- dplyr::left_join(measurement_info, injections_mitostress, by = c("interval"))
+
+    ## case glycostress
+    #injections <- c("basal", "glucose", "OM", "2DG")
+    #injections_glycostress <- tibble(interval = 1:4, injection=injections)
+    #measurement_info <- left_join(measurement_info, injections_glycostress, by = c("interval"))
+  }
+
+  return(measurement_info)
+
+}
+
+get_xf_assayinfo <- function(filepath_seahorse,
+                             date_style = "empty",
+                             instrument = "XFe96",
+                             norm_available,
+                             xls_ocr_backgroundcorrected) {
+
+
+  if (instrument == "XFHSmini"){
+    gain1_cell <-  "D68"
+    gain2_cell <-  "E68"
+  }
+
+  if (instrument == "XFe96"){
+    gain1_cell <-  "D70"
+    gain2_cell <-  "E70"
+  }
+
+  # read Assay Configuration sheet
+    meta_df <- readxl::read_excel(filepath_seahorse,
+                          sheet = "Assay Configuration",
+                          col_names = c("parameter", "value"),
+                          range = "A1:B83"
+    )
+
+ 
+
+  meta_df <- meta_df[!is.na(meta_df$parameter), ]
+
+  # read Assay Configuration sheet gain1
+
+    gain1 <- readxl::read_excel(filepath_seahorse,
+                        sheet = "Assay Configuration",
+                        col_names = c("value"),
+                        range = gain1_cell
+    )
+    
+  # read Assay Configuration sheet gain2
+
+    gain2 <- readxl::read_excel(filepath_seahorse,
+                        sheet = "Assay Configuration",
+                        col_names = c("value"),
+                        range = gain2_cell
+    )
+
+
+
+  # read target emission cells
+  O2_target_emission <- readxl::read_excel(filepath_seahorse,
+                                   sheet = "Calibration",
+                                   col_names = FALSE,
+                                   range = "B4"
+  )
+
+
+
+  # read pH target emission cells
+    pH_target_emission <- readxl::read_excel(filepath_seahorse,
+                                     sheet = "Calibration",
+                                     col_names = FALSE,
+                                     range = "P4"
+
+
+    )
+
+  F0 <- as.double(meta_df$value[meta_df$parameter == "Calculated FO"])
+  V_C <- as.double(meta_df$value[meta_df$parameter == "Pseudo Volume"])
+  Tau_AC <- as.double(meta_df$value[meta_df$parameter == "TAC"])
+  Tau_W <- as.double(meta_df$value[meta_df$parameter == "TW"])
+  Tau_C <- as.double(meta_df$value[meta_df$parameter == "TC"])
+  Tau_P <- as.double(meta_df$value[meta_df$parameter == "TP"])
+  KSV_original <- as.double(meta_df$value[meta_df$parameter == "ksv"])
+  KSV_corrected <- as.double(meta_df$value[meta_df$parameter == "Corrected Ksv"])
+  KSV_tempCorrection <- as.logical(meta_df$value[meta_df$parameter == "Ksv Temp Correction"])
+  KSV <- KSV_corrected
+
+  pH_0 <- as.double(meta_df$value[meta_df$parameter == "Calibration pH"])
+  pH_plateVolume <- as.double(meta_df$value[meta_df$parameter == "Plate Volume"])
+  pH_kVol <- as.double(meta_df$value[meta_df$parameter == "kVol"])
+
+
+  plate_id <- meta_df$value[meta_df$parameter == "Plate Barcode"]
+  cartridge_barcode <- meta_df$value[meta_df$parameter == "Cartridge Barcode"]
+  assay_name <- meta_df$value[meta_df$parameter == "Assay Name"]
+  instrument_serial <- meta_df$value[meta_df$parameter == "Instrument Serial"]
+
+  pH_targetEmission <- as.double(pH_target_emission[[1]])
+  O2_targetEmission <- as.double(O2_target_emission[[1]])
+  gain1 <- as.double(gain1[[1]])
+  gain2 <- as.double(gain2[[1]])
+
+  # other constants
+  O2_0_mmHg <- 151.6900241
+  O2_0_mM <- 0.214
+
+  if (date_style == "US"){
+    date_run <- lubridate::mdy_hm(meta_df$value[meta_df$parameter == "Last Run"])
+    logger::log_info("Converted date to US format (US = mdy_hm, NL = dmy_hm).") # (Date-time column)
+    #be carefull with the data format in excel! either mdy or dmy
+  }
+
+  if (date_style == "NL"){
+    date_run <- lubridate::dmy_hm(meta_df$value[meta_df$parameter == "Last Run"])
+    logger::log_info("Converted date to NL format (US = mdy_hm, NL = dmy_hm).") # (Date-time column)
+    #be carefull with the data format in excel! either mdy or dmy
+  }
+
+  if (date_style == "empty"){
+    date_run <- meta_df$value[meta_df$parameter == "Last Run"] # (Character instead of date-time column)
+    logger::log_info("Date-style is empty, no date conversion was performed. Format is 'character' instead of 'date'.")
+    #be carefull with the data format in excel! either mdy or dmy
+  }
+
+  if(instrument == "XFHSmini"){
+    tibbler <- tibble::tibble(
+      F0 = 4.63e04,
+      V_C = 9.15,
+      Tau_AC = 746,
+      Tau_W = 296,
+      Tau_C = 246,
+      Tau_P = 60.9,
+      KSV = 2.06e-02,
+      KSV_corrected = 2.06e-02,
+      KSV_original = 2.06e-02,
+      KSV_tempCorrection = FALSE,
+      gain1,
+      gain2,
+      pH_0,
+      pH_plateVolume,
+      pH_kVol,
+      pH_targetEmission,
+      O2_targetEmission,
+      plate_id,
+      cartridge_barcode,
+      date_run,
+      assay_name,
+      instrument_serial,
+      O2_0_mmHg,
+      O2_0_mM
+    )
+
+  }
+  if(instrument == "XFe96"){
+    tibbler <- tibble::tibble(
+      F0,
+      V_C,
+      Tau_AC, Tau_W,
+      Tau_C, Tau_P,
+      KSV,
+      KSV_tempCorrection,
+      KSV_original,
+      gain1,
+      gain2,
+      pH_0,
+      pH_plateVolume,
+      pH_kVol,
+      pH_targetEmission,
+      O2_targetEmission,
+      plate_id,
+      cartridge_barcode,
+      date_run,
+      assay_name,
+      instrument_serial,
+      O2_0_mmHg,
+      O2_0_mM
+    )
+  }
+
+
+  tibbler$norm_available <- norm_available
+  tibbler$xls_ocr_backgroundcorrected <- xls_ocr_backgroundcorrected
+
+
+  return(tibbler)
+}
+
+get_platelayout_data <- function(filepath_seahorse, my_sheet, my_range, my_param ){
+
+      df <- readxl::read_excel(filepath_seahorse, sheet = my_sheet, range = my_range)
+
+      colnames(df)[1] <- "firstCol"
+
+      df <-  tidyr::gather(df, key = "key", value = "my_value", -firstCol) %>%
+        dplyr::mutate(firstCol = paste0(firstCol, key) ) %>%
+        dplyr::select(well = firstCol, my_value) %>%
+        dplyr::arrange(gsub("\\\\d", "", well, as.numeric(gsub("\\\\D", "", well))))
+
+      colnames(df)[2] <- my_param
+
+      # add a zero between letter and number if wellname has 2 characters for normalization data
+      for (i in 1:nrow(df)){
+        if (nchar(df$well[i]) ==  2) {
+          wellName <- sub("(.{1})(.*)", "\\\\10\\\\2", df$well[i])
+        } else {
+          wellName <- df$well[i]
+        }
+        df$well[i] <- wellName
+      }
+
+     return(df)
+
+}
+
+print("read_xfplate is ready")
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+<section id="preprocess_xfplate" class="level3" data-number="11.1.2">
+<h3 data-number="11.1.2" class="anchored" data-anchor-id="preprocess_xfplate"><span class="header-section-number">11.1.2</span> preprocess_xfplate()</h3>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-2">Loading
+  webR...</button>
+<div id="webr-editor-2"></div>
+<div id="webr-code-output-2" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-2");
+  const outputDiv = document.getElementById("webr-code-output-2");
+  const editorDiv = document.getElementById("webr-editor-2");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+preprocess_xfplate <- function(xf){
+  
+
+  # Use our xf list from read_xfplate() with all the necessary Seahorse data to fill this data tibble.
+  
+  xf_raw_pr <- preprocess_xf_raw(xf$raw,
+                                 xf$pHcal,
+                                 xf$inj,
+                                 xf$assayinfo,
+                                 xf$buffer,
+                                 xf$norm,
+                                 xf$flagged)
+
+  xf_rate_pr <- preprocess_xf_rate(xf$rate,
+                                   xf$norm,
+                                   xf$flagged)
+
+  xf_plate_pr <- xf_raw_pr %>%
+    dplyr::group_by(plate_id) %>%
+    tidyr::nest() %>%
+    dplyr::mutate(filepath_seahorse = list(tibble::tibble(
+                  directory_path = dirname(as.character(xf$filepath_seahorse)),
+                  base_name = basename(as.character(xf$filepath_seahorse)),
+                  full_path = xf$filepath_seahorse
+                )),
+                  date = xf$assayinfo$date_run,
+                  assay_info = list(tibble::tibble(xf$assayinfo)),
+                  rate_data = list(tibble::tibble(xf_rate_pr)),
+                  injection_info = list(tibble::tibble(xf$inj))) %>%
+    dplyr::select(plate_id, filepath_seahorse, date, assay_info, injection_info,
+                  raw_data = data, rate_data)
+  
+
+  return(xf_plate_pr)
+}
+
+preprocess_xf_raw <- function(xf_raw,
+                              xf_pHcal,
+                              xf_inj,
+                              xf_assayinfo,
+                              xf_buffer,
+                              xf_norm,
+                              xf_flagged) {
+  
+      
+  # convert the original integer column to integers again, instead of double
+  xf_raw_pr <- xf_raw #VB did original did not work in webr ?!
+
+  # rename columns
+  xf_raw_pr <- rename_columns(xf_raw_pr)
+
+  # convert time column
+  xf_raw_pr <- convert_timestamp(xf_raw_pr)
+
+  # correct pH_em_corr
+  xf_raw_pr$pH_em_corr_corr <- correct_pH_em_corr(xf_raw_pr$pH_em_corr,
+                                                  xf_pHcal$pH_cal_em,
+                                                  xf_assayinfo$pH_targetEmission[1])
+
+
+  # calculate backgrounds and join
+  background <- calc_background(xf_raw_pr)
+
+  xf_raw_pr <- xf_raw_pr %>%
+    dplyr::left_join(background, by = c("measurement"), relationship = "many-to-many")
+
+  # add injection info
+  xf_raw_pr <- dplyr::left_join(xf_raw_pr, xf_inj, by = "measurement")
+
+  #add plate_id to df
+  xf_raw_pr$plate_id <- xf_assayinfo$plate_id
+
+  #add norm_info
+  xf_raw_pr <- xf_raw_pr %>% dplyr::left_join(xf_norm, by = c("well"))
+
+  #add bufferfactor
+  xf_raw_pr <- xf_raw_pr %>% dplyr::left_join(xf_buffer, by = c("well"))
+
+  #add flag well columnn
+  xf_raw_pr$flagged_well <- FALSE
+  xf_raw_pr$flagged_well[xf_raw_pr$well %in% xf_flagged] <- TRUE
+
+  # select columns that are needed
+  xf_raw_pr <- xf_raw_pr %>% dplyr::select(
+    plate_id, well, measurement, tick, timescale, minutes, group, interval, injection,
+    O2_em_corr, pH_em_corr, O2_mmHg, pH, pH_em_corr_corr, O2_em_corr_bkg,
+    pH_em_corr_bkg, O2_mmHg_bkg, pH_bkgd, pH_em_corr_corr_bkg, bufferfactor, cell_n, flagged_well
+  )
+
+  return(xf_raw_pr)
+  
+}
+
+preprocess_xf_rate <- function(xf_rate,
+                               xf_norm,
+                               xf_flagged){
+  #add norm_info to rate data
+  OCR_from_excel <- xf_rate %>% dplyr::left_join(xf_norm, by = c("well"))
+
+  OCR_from_excel$flagged_well <- FALSE
+  OCR_from_excel$flagged_well[OCR_from_excel$well %in% xf_flagged] <- TRUE
+
+  return(OCR_from_excel)
+}
+
+rename_columns <- function(xf_raw_pr) {
+
+  # change column names into terms without spaces
+  colnames(xf_raw_pr) <- c(
+    "measurement", "tick", "well", "group",
+    "time", "temp_well", "temp_env", "O2_isvalid", "O2_mmHg",
+    "O2_light", "O2_dark", "O2ref_light", "O2ref_dark",
+    "O2_em_corr", "pH_isvalid", "pH", "pH_light", "pH_dark",
+    "pHref_light",
+    "pHref_dark", "pH_em_corr", "interval"
+  )
+
+  return(xf_raw_pr)
+}
+
+convert_timestamp <- function(xf_raw_pr) {
+
+  # first make sure that the data is sorted correctly
+  xf_raw_pr <- dplyr::arrange(xf_raw_pr, tick, well)
+
+  # add three columns to df (totalMinutes, minutes and time) by converting the timestamp into seconds
+  xf_raw_pr$time <- as.character((xf_raw_pr$time))
+  times <- strsplit(xf_raw_pr$time, ":")
+  xf_raw_pr$totalMinutes <- sapply(times, function(x) {
+    x <- as.numeric(x)
+    x[1] * 60 + x[2] + x[3] / 60
+  })
+  xf_raw_pr$minutes <- xf_raw_pr$totalMinutes - xf_raw_pr$totalMinutes[1] # first row needs to be first timepoint!
+  xf_raw_pr$timescale <- round(xf_raw_pr$minutes * 60)
+
+  return(xf_raw_pr)
+}
+
+correct_pH_em_corr <- function(pH_em_corr, pH_cal_em, pH_targetEmission){
+
+  correct_pH_em_corr <- (pH_targetEmission / pH_cal_em) * pH_em_corr
+
+}
+
+calc_background <- function(xf_raw_pr){
+
+  background <- xf_raw_pr %>%
+    dplyr::select(group, well, measurement, timescale, O2_em_corr,
+           pH_em_corr, O2_mmHg, pH, pH_em_corr_corr) %>%
+    dplyr::filter(group == "Background") %>%
+    dplyr::reframe(
+      measurement,
+      O2_em_corr_bkg = mean(O2_em_corr),
+      pH_em_corr_bkg = mean(pH_em_corr),
+      O2_mmHg_bkg = mean(O2_mmHg),
+      pH_bkgd = mean(pH),
+      pH_em_corr_corr_bkg = mean(pH_em_corr_corr)
+    )
+
+  return(background)
+}
+
+print("preprocess_xfplate is ready")
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+<section id="run_seahtrue" class="level3" data-number="11.1.3">
+<h3 data-number="11.1.3" class="anchored" data-anchor-id="run_seahtrue"><span class="header-section-number">11.1.3</span> run_seahtrue()</h3>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-3">Loading
+  webR...</button>
+<div id="webr-editor-3"></div>
+<div id="webr-code-output-3" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-3");
+  const outputDiv = document.getElementById("webr-code-output-3");
+  const editorDiv = document.getElementById("webr-editor-3");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+
+run_seahtrue <- function(filepath_seahorse){
+  
+  filepath_seahorse %>% 
+    read_xfplate() %>%
+      preprocess_xfplate()
+  
+}
+
+print("run_seahtrue is ready")
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+</section>
+<section id="run-it" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="run-it"><span class="header-section-number">11.2</span> run it</h2>
+<p>For one file</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-4">Loading
+  webR...</button>
+<div id="webr-editor-4"></div>
+<div id="webr-code-output-4" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-4");
+  const outputDiv = document.getElementById("webr-code-output-4");
+  const editorDiv = document.getElementById("webr-editor-4");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+library(tidyverse)
+
+webr::install("logger")
+library(logger)
+
+#set file source
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/main/inst/extdata/"
+name_srcfile <- "20191219 SciRep PBMCs donor A.xlsx"
+output_srcfile <- "VB.xlsx"
+
+#download file and rename to "VB.xlsx"
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    name_srcfile), 
+  output_srcfile)
+
+
+XF <-run_seahtrue("VB.xlsx") 
+
+XF
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>For three files</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-5">Loading
+  webR...</button>
+<div id="webr-editor-5"></div>
+<div id="webr-code-output-5" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-5");
+  const outputDiv = document.getElementById("webr-code-output-5");
+  const editorDiv = document.getElementById("webr-editor-5");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+library(tidyverse)
+
+webr::install("logger")
+library(logger)
+
+#set file source
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/renv-sync_issue_2/inst/extdata/"
+
+#file 1
+name_srcfile <- "20191219 SciRep PBMCs donor A.xlsx"
+output_srcfile <- "20191219 SciRep PBMCs donor A.xlsx"
+
+#download file 1
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    name_srcfile), 
+  output_srcfile)
+
+# file 2
+name_srcfile <- "20200110 SciRep PBMCs donor B.xlsx"
+output_srcfile <- "20200110 SciRep PBMCs donor B.xlsx"
+
+#download file 2
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    name_srcfile), 
+  output_srcfile)
+
+# file 3
+name_srcfile <- "20200110 SciRep PBMCs donor C.xlsx"
+output_srcfile <- "20200110 SciRep PBMCs donor C.xlsx"
+
+#download file 3
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    name_srcfile), 
+  output_srcfile)
+
+file_list <- c("20191219 SciRep PBMCs donor A.xlsx",
+               "20200110 SciRep PBMCs donor B.xlsx",
+               "20200110 SciRep PBMCs donor C.xlsx"
+               )
+
+
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>Here we use the nice <code>map</code> function from <code>purrr</code> that we introduced previously:</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-6">Loading
+  webR...</button>
+<div id="webr-editor-6"></div>
+<div id="webr-code-output-6" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-6");
+  const outputDiv = document.getElementById("webr-code-output-6");
+  const editorDiv = document.getElementById("webr-editor-6");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+xf_3_read <- file_list %>% 
+  map_dfr(~run_seahtrue(.x))
+
+xf_3_read`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>… and we plot the time vs O2 for the raw data for the second experiment</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-7">Loading
+  webR...</button>
+<div id="webr-editor-7"></div>
+<div id="webr-code-output-7" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-7");
+  const outputDiv = document.getElementById("webr-code-output-7");
+  const editorDiv = document.getElementById("webr-editor-7");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+
+xf_3_read %>%
+  filter(str_detect(plate_id, "V01941")) %>% 
+  select(plate_id, raw_data)%>%
+  unnest(c(raw_data)) %>%
+  ungroup()%>%
+  select(well, minutes, group, O2_mmHg) %>%
+  filter(group == "100.000") %>%
+  ggplot(aes(x = minutes, y = O2_mmHg, 
+             group = well)) +
+    geom_point() +
+    theme_bw(base_size = 15)+
+    facet_wrap(~well)`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+<section id="bioenergetic-space-plot" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="bioenergetic-space-plot"><span class="header-section-number">11.3</span> Bioenergetic space plot</h2>
+<p>For making the bioenergetic space plots that were proposed in the Mookerjee et al.&nbsp;JBC <a href="https://www.sciencedirect.com/science/article/pii/S0021925820429084">Quantifying intracellular rates of glycolytic and oxidative ATP production and consumption using extracellular flux measurements</a>, we need to do four things:</p>
+<ul>
+<li>Establish buffering power of the culture medium</li>
+<li>Correct ECAR for OCR-derived acidification</li>
+<li>Get the ATP assumptions and formulas into R</li>
+<li>Plot the ATP fluxes in a space plot and derive the indices</li>
+</ul>
+<p>The first needs to be done in the lab using established protocols for calculating buffering power, preferably with H2SO4 as acid. The second to fourth are merely some data analysis and plotting in R.</p>
+<section id="buffering-power" class="level3" data-number="11.3.1">
+<h3 data-number="11.3.1" class="anchored" data-anchor-id="buffering-power"><span class="header-section-number">11.3.1</span> Buffering power</h3>
+<p>We assume you allready know what the buffering power is of your particular culture medium and assigned that to the meta info of your experiment before running your seahorse plate. In that case it is listed in the <code>bufferfactor</code> column in our <code>raw_data</code> output data. Since each well can theoretically have a different type of culturing medium and thus also a different buffering factor, each well gets its own buffer factor</p>
+<p>Let’s have a look at the buffering power numbers in the <code>xf_3_read</code> data.</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-8">Loading
+  webR...</button>
+<div id="webr-editor-8"></div>
+<div id="webr-code-output-8" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-8");
+  const outputDiv = document.getElementById("webr-code-output-8");
+  const editorDiv = document.getElementById("webr-editor-8");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+xf_3_read %>%
+  filter(str_detect(plate_id, "V01941")) %>% 
+  select(plate_id, raw_data )%>%
+  unnest(c(raw_data)) %>%
+  pull(bufferfactor) %>%
+  unique()
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>You will see that if there is <code>0</code>and <code>2.4</code>. Likely, the background wells were assigned zero and the sample wells 2.4.</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-9">Loading
+  webR...</button>
+<div id="webr-editor-9"></div>
+<div id="webr-code-output-9" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-9");
+  const outputDiv = document.getElementById("webr-code-output-9");
+  const editorDiv = document.getElementById("webr-editor-9");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+xf_3_read %>%
+  filter(str_detect(plate_id, "V01941")) %>% 
+  select(plate_id, raw_data )%>%
+  unnest(c(raw_data)) %>%
+  select(well, bufferfactor) %>%
+  unique() %>% 
+  head(12) #or tail(12)
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>That is indeed the case, as you can see if you run the above code.</p>
+</section>
+<section id="calculations" class="level3" data-number="11.3.2">
+<h3 data-number="11.3.2" class="anchored" data-anchor-id="calculations"><span class="header-section-number">11.3.2</span> Calculations</h3>
+<section id="ocr-derived-ecar" class="level4" data-number="11.3.2.1">
+<h4 data-number="11.3.2.1" class="anchored" data-anchor-id="ocr-derived-ecar"><span class="header-section-number">11.3.2.1</span> OCR-derived ECAR</h4>
+<p>We can calculate the contribution of OCR-derived H+ in multiple ways. Agilent takes an emprical approach and in the Mookerjee paper it is based on enzyme knetics and steady-state assumptions. For the agilent approach the contribution was empiraclly determined as <code>0.61</code> which was named the CCF (C02 contribution factor). For the mookerjee method the factor was <code>0.953</code>.</p>
+</section>
+<section id="atp-per-o2" class="level4" data-number="11.3.2.2">
+<h4 data-number="11.3.2.2" class="anchored" data-anchor-id="atp-per-o2"><span class="header-section-number">11.3.2.2</span> ATP per O2</h4>
+<p>For the agilent approach they take the P/O ratio as <code>2.75</code>, which was assumes and empirically tested. For the mookerjee approach, the P/O ratio was assumed to be <code>2.611</code>, also with a hyperpolarization factor included.</p>
+</section>
+<section id="atp-per-lactate" class="level4" data-number="11.3.2.3">
+<h4 data-number="11.3.2.3" class="anchored" data-anchor-id="atp-per-lactate"><span class="header-section-number">11.3.2.3</span> ATP per lactate</h4>
+<p>Agilent assumed the ATP/lactate ratio is <code>1</code>. Although Mookerjee is doing the same, they also take into account that for each each lactate derived from glucose there can be O2 consumption that produced ATP, this is a factor of <code>0.242</code>.</p>
+</section>
+<section id="combined" class="level4" data-number="11.3.2.4">
+<h4 data-number="11.3.2.4" class="anchored" data-anchor-id="combined"><span class="header-section-number">11.3.2.4</span> Combined</h4>
+<p>Since these are just transformations of our OCR and ECAR data, we can combine all these factors into three separate factors:</p>
+<ul>
+<li>Jglyco_ecar_factor</li>
+<li>Jglyco_ocr_factor</li>
+<li>Joxphos_ocr_factor</li>
+</ul>
+<p>We will also include a scaling factor for data that is not normalized to protein level or cell number. This scalling factor brings the data into the same range as the Mookerjee paper. The estimation of protein concentration in a seahorse well is 10-30 ug per 100000 cells. We thus take 20 ug as an estimate of protein amount in a well.</p>
+</section>
+<section id="code-1" class="level4" data-number="11.3.2.5">
+<h4 data-number="11.3.2.5" class="anchored" data-anchor-id="code-1"><span class="header-section-number">11.3.2.5</span> Code</h4>
+<p>Here is a function for calculating and a pipe for plotting the space. The first is <code>calculate_space</code>, it takes in the following arguments:</p>
+<ul>
+<li>rate =&gt; <code>rate_data</code> format</li>
+<li>param_set_ocr =&gt; timepoints for phases ocr</li>
+<li>param_set_ecar =&gt; timepoints for phases ecar</li>
+<li>atp_factors =&gt; atp calculation factors</li>
+<li>ug_protein_scaling_factor =&gt; scaling factor</li>
+<li>OCR_var =&gt; either OCR_wave_bc or J_oxpos</li>
+<li>ECAR_var =&gt; either ECAR_wave_bc or J_glyco</li>
+</ul>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-10">Loading
+  webR...</button>
+<div id="webr-editor-10"></div>
+<div id="webr-code-output-10" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-10");
+  const outputDiv = document.getElementById("webr-code-output-10");
+  const editorDiv = document.getElementById("webr-editor-10");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+calculate_space <- function(rate,
+                            param_set_ocr, param_set_ecar,
+                            atp_factors,
+                            ug_protein_scaling_factor,
+                            OCR_var, ECAR_var){
+
+  SFI <- function(x, y, max_ecar, max_ocr){
+
+    x_0 <- x + y - max_ocr
+    y_0 <- x + y - max_ecar
+    if(x_0 < 0){x_0 <- 0}
+    if(y_0 < 0){y_0 <- 0}
+    angle_ocr <- atan(max_ocr/x_0)*(180/pi)
+    angle_ecar <- atan(y_0/max_ecar)*(180/pi)
+    SFI <- ((angle_ocr - angle_ecar)/90) *100 #angle relative to 90 degrees
+
+    return(SFI)
+
+  }
+
+  rate <- rate %>%
+    mutate(J_glyco = (ECAR_wave_bc * atp_factors$Jglyco_ecar_factor -
+                        OCR_wave_bc * atp_factors$Jglyco_ocr_factor)/ug_protein_scaling_factor,
+           J_oxphos = (OCR_wave_bc * atp_factors$Joxphos_ocr_factor)/ug_protein_scaling_factor)
+
+  df_ocr <- rate %>%
+    select(my_OCR = all_of(OCR_var), everything()) %>%
+    summarize(OCR = mean(my_OCR), # this was OCR_wave_bc
+              .by = c(group, measurement)) %>%
+    pivot_wider(names_from = measurement, names_prefix = "m", values_from = OCR) %>%
+    rename(all_of(param_set_ocr)) %>%
+    select(group, init_ocr, om_ocr, fccp_ocr, amrot_ocr) %>%
+    mutate(non_mito_ocr = amrot_ocr,
+           basal_ocr = init_ocr - non_mito_ocr,
+           max_ocr = fccp_ocr - amrot_ocr,
+           spare_ocr = max_ocr - basal_ocr,
+           spare_ocr_index = spare_ocr / max_ocr,
+           max_ocr_index = max_ocr/basal_ocr,
+           atp_linked = init_ocr-om_ocr,
+           proton_leak = om_ocr - amrot_ocr,
+           leak_index = proton_leak / basal_ocr,
+           coupling_index = atp_linked / basal_ocr)
+
+  df_ecar <- rate %>%
+    select(my_ECAR = all_of(ECAR_var), everything() ) %>%
+    summarize(ECAR = mean(my_ECAR),
+              .by = c(group, measurement)) %>%
+    pivot_wider(names_from = measurement, names_prefix = "m", values_from = ECAR) %>%
+    rename(all_of(param_set_ecar))  %>%
+    select(group, init_ecar, om_ecar, fccp_ecar, amrot_ecar) %>%
+    mutate(basal_ecar = init_ecar,
+           max_ecar = om_ecar,
+           spare_ecar = max_ecar-basal_ecar,
+           spare_ecar_index = spare_ecar/max_ecar,
+           max_ecar_index = max_ecar/basal_ecar)
+
+  df_space <- df_ocr %>%
+    left_join(df_ecar, by = c("group")) %>%
+    ungroup() %>%
+    mutate(bioenergetic_scope = max_ecar+max_ocr, #or max*max
+           glyco_index = (basal_ecar/bioenergetic_scope)*100,
+           bio_index = ((basal_ecar+basal_ocr)/(max_ecar+ max_ocr))*100, #or basal*basal/max*max
+           glyco_index_max = (max_ecar/bioenergetic_scope)*100,
+           supply_index = pmap_dbl(list(basal_ecar, basal_ocr, max_ecar, max_ocr), SFI))
+
+  return(df_space)
+}
+
+print("calculate_space is ready")`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+</section>
+<section id="space-plot" class="level3" data-number="11.3.3">
+<h3 data-number="11.3.3" class="anchored" data-anchor-id="space-plot"><span class="header-section-number">11.3.3</span> Space plot</h3>
+<p>We set the arguments first for plotting the biospace</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-11">Loading
+  webR...</button>
+<div id="webr-editor-11"></div>
+<div id="webr-code-output-11" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-11");
+  const outputDiv = document.getElementById("webr-code-output-11");
+  const editorDiv = document.getElementById("webr-editor-11");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+#mito stress test params
+param_set_ocr <- c(init_ocr = "m2",
+                   om_ocr = "m3",
+                   fccp_ocr = "m4",
+                   amrot_ocr = "m9")
+
+param_set_ecar <- c(init_ecar = "m2",
+                    om_ecar = "m3",
+                    fccp_ecar = "m4",
+                    amrot_ecar = "m9")
+
+#brand/mookerjee factors
+mookerjee_atp_factors <- list(Jglyco_ecar_factor = 7.23,
+                           Jglyco_ocr_factor = 0.469,
+                           Joxphos_ocr_factor = 4.6988)
+
+#agilent factors
+agilent_atp_factors <- list(Jglyco_ecar_factor = 8.7552,
+                         Jglyco_ocr_factor = 0.61,
+                         Joxphos_ocr_factor = 5.5)
+
+
+#for scale comparison to mookerjee JBC (0 - 70 pmol ATP/min/ug)
+#estimation of protein concentration in well 10-30 ug per 100000 cells
+#20 ug in well approximately
+ug_protein_scaling_factor = 20
+
+#either J or wave_bc
+ECAR_var <- c("J_glyco")
+OCR_var <- c("J_oxphos")
+
+#axis titles for plot
+ECAR_title <- c("J ATP glyco (pmol ATP/min/ug protein)")
+OCR_title <- c("J ATP mito (pmol ATP/min/ug protein)")
+
+#plot title
+plot_title <- "Space plot (mookerjee params)"
+plot_title <- "Space plot (agilent params)"
+
+legend_title <- "Group"
+
+##for plotting the raw ECAR/OCR wihout Jatp conversions:
+# ECAR_var <- c("ECAR_wave_bc")
+# OCR_var <- c("OCR_wave_bc")
+#
+# ECAR_title <- c("ECAR (mpH/min)")
+# OCR_title <- c("OCR (pmol/min)")
+#
+# ug_protein_scaling_factor = 1
+
+# a theme layout setting
+webr::install("MetBrewer")
+my_cols_two <- 
+  MetBrewer::met.brewer(name = "Hiroshige", n = 2)
+
+print("arguments are set")`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>Next we set the input rate table argument</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-12">Loading
+  webR...</button>
+<div id="webr-editor-12"></div>
+<div id="webr-code-output-12" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-12");
+  const outputDiv = document.getElementById("webr-code-output-12");
+  const editorDiv = document.getElementById("webr-editor-12");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+
+rate <- xf_3_read %>%
+  filter(str_detect(plate_id, "V01941")) %>% 
+  select(plate_id, rate_data )%>%
+  unnest(c(rate_data)) %>%
+  ungroup()
+
+print("rate is set")
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>Run the space function</p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-13">Loading
+  webR...</button>
+<div id="webr-editor-13"></div>
+<div id="webr-code-output-13" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-13");
+  const outputDiv = document.getElementById("webr-code-output-13");
+  const editorDiv = document.getElementById("webr-editor-13");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+df_space <- calculate_space(
+                rate %>%
+                  filter(str_detect(group, 
+                                    "100.000|200.000")),
+                param_set_ocr, param_set_ecar,
+                agilent_atp_factors,
+                ug_protein_scaling_factor,
+                OCR_var, ECAR_var
+                            )
+
+print("df_space is ready")`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<p>Plot the <code>df_space</code></p>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-14">Loading
+  webR...</button>
+<div id="webr-editor-14"></div>
+<div id="webr-code-output-14" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-14");
+  const outputDiv = document.getElementById("webr-code-output-14");
+  const editorDiv = document.getElementById("webr-editor-14");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+
+#for two groups only (because of #colors)
+df_space %>%
+  mutate(max_axis = 
+    case_when(
+      fccp_ocr>=amrot_ecar ~ fccp_ocr+fccp_ocr*0.1,
+      fccp_ocr<amrot_ecar ~ amrot_ecar+amrot_ecar*0.1)) %T>%
+  {my_max <<- max(.$max_axis)} %>%
+  arrange(desc(group)) %>%
+  select(group,basal_ocr,fccp_ocr, 
+         basal_ecar, amrot_ecar) %>%
+  ggplot(aes(xmin = 0, ymin = 0, 
+             ymax = fccp_ocr, xmax = amrot_ecar,
+             fill = forcats::fct_rev(group)))+
+  geom_rect(alpha = 0.5, color ="black")+
+  geom_segment(aes(x=0, xend=amrot_ecar, 
+                   y=0, yend=fccp_ocr),
+               color="grey10", linetype = "dashed")+
+  geom_point(aes(x = basal_ecar, y = basal_ocr, 
+                 fill = group), 
+             color = "black", pch = 21, size = 4)+
+  scale_colour_manual(values = my_cols_two) +
+  scale_fill_manual(
+    values = my_cols_two %>% colorspace::lighten(.2),
+    name = legend_title)+
+  labs(title = plot_title,
+       x = ECAR_title,
+       y = OCR_title)+
+  #coord_fixed(ratio = 1,
+  #            xlim = c(0,my_max), ylim = c(0,my_max),
+  #            expand = FALSE, clip = "on")+
+  theme_classic()
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+</section>
+<section id="gauge-plots" class="level3" data-number="11.3.4">
+<h3 data-number="11.3.4" class="anchored" data-anchor-id="gauge-plots"><span class="header-section-number">11.3.4</span> Gauge plots</h3>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-15">Loading
+  webR...</button>
+<div id="webr-editor-15"></div>
+<div id="webr-code-output-15" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-15");
+  const outputDiv = document.getElementById("webr-code-output-15");
+  const editorDiv = document.getElementById("webr-editor-15");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+plot_multi_space_gauge <- function(df_space,
+                                   my_param_to_plot,
+                                   my_colors,
+                                   my_gauge_title,
+                                   my_gauge_subtitle,
+                                   my_label_text_lo,
+                                   my_label_text_hi){
+
+  my_param_df <- df_space %>%
+    select(param = all_of(my_param_to_plot),
+           group) %>%
+    mutate_if(is.numeric, round)
+
+
+  number_of_plots <- nrow(my_param_df)
+
+  plot_list <- list()
+  for (i in 1:number_of_plots){
+
+    my_param_value <- my_param_df %>%  pluck("param", i)
+    my_axis_title <- my_param_df %>%  pluck("group", i)
+
+    plot_list[[i]] <- plot_one_space_gauge(my_param_value,
+                         my_colors,
+                         my_axis_title,
+                         my_label_text_lo,
+                         my_label_text_hi)
+
+
+  }
+
+  multi_plot <- patchwork::wrap_plots(plot_list) +
+    plot_annotation(
+      title = my_gauge_title,
+      subtitle = my_gauge_subtitle
+      #caption = ""
+  ) &   theme(text = element_text(size = 25),
+              axis.title.x = element_text(size = 20))
+
+  return(multi_plot)
+}
+
+plot_one_space_gauge <- function(my_param,
+                                 my_colors,
+                                 my_axis_title,
+                                 my_label_text_lo,
+                                 my_label_text_hi){
+
+
+
+  breaks <- c(0, my_param, 100)
+
+  #gauge chart from 
+  #https://stackoverflow.com/questions/24900903/how-to-draw-gauge-chart-in-r
+  get_poly <- function(a,b,r1=0.5,r2=1.0) {
+    th.start <- pi*(1-a/100)
+    th.end   <- pi*(1-b/100)
+    th       <- seq(th.start,th.end,length=100)
+    x        <- c(r1*cos(th),rev(r2*cos(th)))
+    y        <- c(r1*sin(th),rev(r2*sin(th)))
+    return(data.frame(x,y))
+  }
+
+
+
+  plot <- ggplot() +
+    geomtextpath::geom_textcurve(
+      data = data.frame(x = -1, xend =  0, y = 0, yend = 1),
+      aes(x, y, xend = xend, yend = yend),
+          hjust = 0.2,
+          curvature = -0.4,
+          label = my_label_text_lo,
+          size = 6,
+          vjust = -1,
+          color = my_colors[1])+
+    geomtextpath::geom_textcurve(
+      data = data.frame(x = 0, xend =  1, y = 1, yend = 0),
+      aes(x, y, xend = xend, yend = yend),
+      hjust = 0.8,
+      curvature = -0.4,
+      angle = 90,
+      label = my_label_text_hi,
+      size = 6,
+      vjust = -1,
+      color = my_colors[2]
+    )+
+    geom_polygon(data=get_poly(breaks[1],
+                               breaks[2]),
+                 aes(x,y),fill= my_colors[1])+
+    geom_polygon(data=get_poly(breaks[2],
+                               breaks[3]),
+                 aes(x,y),fill= my_colors[2])+
+    geom_polygon(data=get_poly(my_param-0.2, 
+                               my_param+0.2,
+                               r1 = 0.5,
+                               r2 = 1.1),
+                 aes(x,y))+
+    geom_text(data=as.data.frame(breaks), 
+              size= 6 , vjust=0,
+              aes(x=1.1*cos(pi*(1-breaks/100)),
+                  y=1.125*sin(pi*(1-breaks/100)),
+                  label=paste0(breaks,"%")))+
+    labs(#title = my_gauge_title,
+      x = my_axis_title )+
+    #coord_fixed()+
+    coord_fixed(ratio = 1,
+                xlim = c(-1.2,1.2), ylim = c(0,1.2),
+                expand = TRUE, clip = "on")+
+    theme_void()+
+    theme(plot.title = element_text(size = rel(0.2), 
+                                    hjust = 0, vjust = -1),
+          axis.title.x = element_text(size = rel(0.2), 
+                                      vjust = 1)
+    )
+
+  return(plot)
+
+}
+
+print("multi_gauge functions are ready")
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-16">Loading
+  webR...</button>
+<div id="webr-editor-16"></div>
+<div id="webr-code-output-16" aria-live="assertive">
+  <pre style="visibility: hidden"></pre>
+</div>
+<script type="module">
+  // Retrieve webR code cell information
+  const runButton = document.getElementById("webr-run-button-16");
+  const outputDiv = document.getElementById("webr-code-output-16");
+  const editorDiv = document.getElementById("webr-editor-16");
+
+  // Add a light grey outline around the code editor
+  editorDiv.style.border = "1px solid #eee";
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: `
+webr::install("geomtextpath")
+webr::install("patchwork")
+library(patchwork)
+
+hiroshige_cols_four <- c("#ef8a47", "#ffd06f", 
+                         "#72bcd5", "#376795")
+my_doughnut_cols_lightblue <- c(hiroshige_cols_four[3], 
+                                "#D1D3D4")
+my_colors <- my_doughnut_cols_lightblue
+my_param_to_plot <- "supply_index"
+my_gauge_title <- "Supply index"
+my_gauge_subtitle <- "Describes the flexibility in switching between glyco and mito."
+my_label_text_lo <- "lo"
+my_label_text_hi <- "hi"
+
+plot_multi_space_gauge(df_space %>%
+                         slice(1:4),
+                       my_param_to_plot,
+                       my_colors,
+                       my_gauge_title,
+                       my_gauge_subtitle,
+                       my_label_text_lo,
+                       my_label_text_hi)
+
+`,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // TODO: Could be problematic for slide decks
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: '17.5rem',               // Bootstrap is 1 rem
+      renderLineHighlight: "none",     // Disable current line highlighting
+      hideCursorInOverviewRuler: true  // Remove cursor indictor in right hand side scroll bar
+    });
+
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${contentHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        executeCode(editor.getValue());
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          executeCode(currentLine);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          executeCode(selectedText);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+  });
+
+  // Function to execute the code (accepts code as an argument)
+  async function executeCode(codeToRun) {
+    // Disable run button for code cell active
+    runButton.disabled = true;
+
+    // Create a canvas variable for graphics
+    let canvas = undefined;
+
+    // Initialize webR
+    await globalThis.webR.init();
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    await webR.evalRVoid("webr::canvas(width=504, height=360)");
+
+    // Capture output data from evaluating the code
+    const result = await webRCodeShelter.captureR(codeToRun, {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false//,
+      // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    });
+
+    // Start attempting to parse the result data
+    try {
+
+      // Stop creating images
+      await webR.evalRVoid("dev.off()");
+
+      // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      // Clean the state
+      const msgs = await webR.flush();
+
+      // Output each image stored
+      msgs.forEach(msg => {
+        // Determine if old canvas can be used or a new canvas is required.
+        if (msg.type === 'canvas'){
+          // Add image to the current canvas
+          if (msg.data.event === 'canvasImage') {
+            canvas.getContext('2d').drawImage(msg.data.image, 0, 0);
+          } else if (msg.data.event === 'canvasNewPage') {
+            // Generate a new canvas element
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width = "700px";
+            canvas.style.display = "block";
+            canvas.style.margin = "auto";
+          }
+        }
+      });
+
+      // Nullify the outputDiv of content
+      outputDiv.innerHTML = "";
+
+      // Design an output object for messages
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        // Display results as text
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        // If nothing is present, hide the element.
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      // Place the graphics on the canvas
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      // Clean up the remaining code
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    executeCode(editor.getValue());
+  };
+</script>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./surf.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Surfing the waves</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

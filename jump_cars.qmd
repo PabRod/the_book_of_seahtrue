@@ -1,0 +1,1157 @@
+---
+title: "Plotting cars"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+---
+
+## Learn and code
+
+First, let's make a simple scatter plot. We use a famous dataset that is used in R a lot for educational puposes. This is the `mtcars` dataset (mtcars = "Motor Trend Car Road Tests"). See [parameter overview](https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html) and [documentation](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars) for info about the `mtcars` dataset. We can always call this dataset when using R, it is one of many datasets available from base R or tidyverse packages.
+
+First, we will inspect the dataset. For this we will load the tidyverse:
+
+``` {webr-r}
+
+library(tidyverse)
+```
+
+Once tidyverse is loaded via the `library` call, it is loaded in your current session in your browser, so you do not have to load it each time. Next have a look at the full dataset.
+
+``` {webr-r}
+
+mtcars
+```
+
+or
+
+``` {webr-r}
+
+#if you get an error here, 
+# please load the library call to tidyverse
+mtcars %>% glimpse()
+```
+
+or
+
+``` {webr-r}
+
+mtcars %>% head()
+```
+
+or
+
+``` {webr-r}
+
+mtcars %>% tail()
+```
+
+::: {.callout-note collapse="true"}
+## The pipe %\>% operator
+
+The `%>%` operator is a huge component of the tidy way of working. In R we now also have a "native" pipe that we can also use. This is the `|>` operator. For a history of the pipe in R see this [blogpost](http://adolfoalvarez.cl/blog/2021-09-16-plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/).
+
+``` {webr-r}
+
+mtcars %>% head() 
+
+#gives the same results as:
+mtcars |> head()
+```
+:::
+
+Let's select a small part of the data using `select` from the `dplyr` package:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, disp)
+  
+```
+
+Next, make a simple plot with the miles per gallon (`mpg`) and dispension parameters (`disp`) in the `mtcars` dataset.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point(size = 4)
+  
+```
+
+This is a very basic plot, without much formatting. Let's make it prettier!
+
+Add color and bring in a third parameter:
+
+``` {webr-r}
+
+mtcars %>% 
+    #added cyl to the selection here
+    select(mpg, disp, cyl) %>% 
+    ggplot(aes(x = mpg, y = disp,
+    #added color to the aesthetics here
+               color = cyl))+ 
+        geom_point(size = 4)
+  
+```
+
+Here we need to have a look at data-types. The `cyl` parameters is a numerical parameter. GGplot automatically assumes we want a continous scale for this. Instead the `cyl` is more of a categorical data type there are either 4, 6 or 8 cylinders in each car so we can make the `cyl` parameter categorical like this:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = as.factor(cyl)))+
+        geom_point(size = 4)
+  
+```
+
+If you want to have different color you can use one of the many color pallettes that are available:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = as.factor(cyl)))+
+        geom_point(size = 4)+
+  #I also manually changed the name of the legend here
+        scale_color_brewer(name = "cylinders", 
+                            palette = "Set2")
+  
+```
+
+Apart from color you can change the shape of the datapoints:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = as.factor(cyl),
+#please note to also add shape to the aesthetics here
+                shape = as.factor(cyl)))+ 
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                            name = "cylinders")
+  
+```
+
+GGplot can use different themes for your plots and there are many many options to tweak your plots to the way you like
+
+Let's change titles:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")
+```
+
+Change the plotting theme and base size of the elements:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        theme_bw(base_size = 20)
+```
+
+Change the scaling of the axes. It is good practice to plot graphs from zero:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(limits = c(0, NA),
+                           expand = c(0,NA))+
+        scale_y_continuous(limits = c(0, NA),
+                            expand = c(0,NA))+
+        theme_bw(base_size = 20)
+```
+
+Now the datapoints at the maxima of the axis are not completely visible so it would be nice that we have some more space:
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+```
+
+Now we have generated a nice visualisation of our data using `ggplot`. Please note that `ggplot` uses layers and we added each time a different layer of information to the ggplot. If you want you can go wild with ggplot. Please find a nice [overview](https://www.cedricscherer.com/2019/12/30/best-tidytuesday-2019/) of visualisations using ggplot, tidy and R from Cedric Scherer. Also the underlying R code is available for those plots.
+
+## Exercises
+
+### Adding layers and changing the MTCARS plot
+
+::: callout-tip
+#### Exercise 1
+
+Give the points in the ggplot some transparency (or opacity), so that individual points are better visible. TIP: use the `alpha` argument it should be a number from 0 to 1.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4,
+                   #type your extra code here:
+
+                    )+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 1
+
+Please note that the alpha we added is not part of an aesthetics (`aes`), meaning that the value of the alpha is not linked with a parameter in our data.
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+                color = as.factor(cyl),
+                shape = as.factor(cyl)))+
+        geom_point(size = 4,
+                   #type your extra code here:
+                    alpha = 0.7
+                    )+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                        name = "cylinders")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+```
+:::
+
+::: callout-tip
+#### Exercise 2
+
+Add a layer that will generate a smooth linear regression line that shows the relation between `mpg` and `disp`. Use the `stat_smooth` command for this.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point(size = 4,
+                    alpha = 0.7)+
+        # enter code here
+        
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 2
+
+Please make sure that the ggplot is not separates into groups, if the data is grouped by `color` or `shape` the regression line for each group will be generated.
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point(size = 4,
+                    alpha = 0.7)+
+        # enter code here
+        stat_smooth(geom = "line",
+                    method = "lm",
+                    formula = "y ~ x")+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+```
+:::
+
+::: callout-tip
+#### Exercise 3
+
+Use the `facet_wrap` command to make three separate plots for each cylinder.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point(size = 4,
+                    alpha = 0.7)+
+        
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)
+        # enter code here 
+        #(and don't forget to at a plus to the last line)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 3
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point(size = 4,
+                    alpha = 0.7)+
+        labs(title = "My cool MTCARS plot",
+                x = "miles per gallon",
+                y = "dispension")+
+        scale_x_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        scale_y_continuous(
+              limits = c(0, NA),
+              expand = expansion(mult = c(0, 0.1)))+
+        theme_bw(base_size = 20)+
+        facet_wrap(~cyl)
+```
+:::
+
+### Fixing common errors
+
+Below is some code that is not working properly, because of coding semantics mistakes. Can you spot (and fix) the errors?
+
+::: callout-important
+#### Fix error 1
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp
+               color = cyl))+
+        geom_point(size = 4)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Error 1
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, #the error was here
+               color = cyl))+
+        geom_point(size = 4)
+```
+
+Commas are often forgotten, but easily fixed. Within brackets arguments are separated with commas. R also generates an error that is helpful and can point you to the missing `,`.
+:::
+
+::: callout-important
+#### Fix error 2
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+               color = cyl)) %>% 
+        geom_point(size = 4)
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Error 2
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp, 
+               color = cyl))+ #the error was in this line
+        geom_point(size = 4)
+```
+
+Ggplot layers are added with a `+` not with the `pipe` term.
+:::
+
+::: callout-important
+#### Fix error 3
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp
+               color = cyl)) +
+        geom_point(size = 4) +
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Error 3
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = cyl))+
+        geom_point(size = 4) #the error was in this line
+```
+
+Make sure that the end of a layer or line of code is not followed up with a `+` or `%>%`.
+:::
+
+::: callout-important
+#### Fix error 4
+
+This is an error that is not apparent from an error message that R generates for you. However, the code does not give you what you want. The plot should show the `cyl` parameter in different shapes, just like there are three different colors for each level of the `cyl` parameter.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = as.factor(cyl)),
+                shape = as.factor(cyl))+ 
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                            name = "cylinders")
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Error 4
+
+``` {webr-r}
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp,
+               color = as.factor(cyl), #parenthesis error
+               shape = as.factor(cyl)))+ 
+        geom_point(size = 4)+
+        scale_color_brewer(name = "cylinders",
+                            palette = "Set2")+
+        scale_shape(solid = TRUE,
+                            name = "cylinders")
+```
+
+The `shape` argument should be included in the aesthetics (`aes`) part of the ggplot
+:::
+
+::: {.callout-note collapse="true"}
+#### Solution to Error 4 using chatGPT
+
+Since chatGPT can also solve basic programming problems <https://doi.org/10.1371/journal.pcbi.1011511>, I tried solving Error 4 also with chatGPT. In my chatGPT session, the following solution was given:
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             color = as.factor(cyl), 
+             shape = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_shape_manual(
+    name = "Cylinders",
+    values = c(1, 2, 3), # Customize shape values as needed
+    labels = c("4", "6", "8")
+  )
+
+```
+
+chatGPT indeed put the `shape` in the `aes`, but also started making other changed. The remark that chatGPT made was: *"you should correct the syntax error and use scale_shape_manual() instead of scale_shape()."*... *"to customize the shape values and labels."*. I didn't really ask for that, and from there it went all downhill. Let's call that the "chatGPT loop of death". Let's see what happened. 
+
+Running the "improved" code showed that there was still no `fill`, so it did not improve in a way that I wanted.
+
+Next I said *"but now the shapes don't have a fill"* and chatGPT replied:
+
+*"I see your concern. If you want to have both color and fill for the shapes, you can achieve this by mapping fill within the aes() call and using scale_fill_brewer() for the fill scale. Here's the modified code to achieve that:"*
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             color = as.factor(cyl), 
+             shape = as.factor(cyl), 
+             fill = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_fill_brewer(name = "Cylinders", palette = "Set2") +
+  scale_shape_manual(
+    name = "Cylinders",
+    values = c(1, 2, 3), # Customize shape values as needed
+    labels = c("4", "6", "8")
+  )
+```
+
+This again did not give fill unfortunately. Asking for a different solution: *"the fill is not there, do you have another solution?"*
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             color = as.factor(cyl), 
+             shape = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_fill_manual(
+    name = "Cylinders",
+    values = c("4" = "red", "6" = "blue", "8" = "green") 
+  ) +
+  scale_shape_manual(
+    name = "Cylinders",
+    values = c(1, 2, 3), # Customize shape values as needed
+    labels = c("4", "6", "8")
+  )
+
+```
+
+Also did not give me fill.
+
+Another attempt by chatGPT (still not working):
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  mutate(cyl_shape_fill = as.factor(cyl)) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             shape = cyl_shape_fill, 
+             color = cyl_shape_fill)) +
+  geom_point(size = 4) +
+  scale_shape_manual(
+    name = "Cylinders",
+    values = c("4" = 21, "6" = 22, "8" = 23), 
+    labels = c("4", "6", "8")
+  ) +
+  scale_color_manual(
+    name = "Cylinders",
+    values = c("4" = "red", "6" = "blue", "8" = "green") 
+  )
+
+```
+
+Another attempt by chatGPT (still not working):
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             shape = as.factor(cyl), 
+             color = as.factor(cyl))) +
+  geom_point(size = 4) +
+  geom_point(aes(fill = as.factor(cyl)), size = 2, 
+             show.legend = FALSE) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_fill_brewer(name = "Cylinders", palette = "Set2") +
+  scale_shape_manual(
+    name = "Cylinders",
+    values = c(1, 2, 3), # Customize shape values as needed
+    labels = c("4", "6", "8")
+  )
+
+```
+
+Asking chatGPT to use `scale_shape` and `solid=TRUE` gives:
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             color = as.factor(cyl), 
+             shape = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_shape(solid = TRUE,
+              name = "Cylinders",
+              breaks = c("4", "6", "8"),
+              labels = c("4", "6", "8"),
+              values = c(15, 16, 17),
+              guide = guide_legend(
+                override.aes = 
+                    list(fill = c("red", "blue", "green")))
+  )
+```
+
+.... but apparently chatGPT doesn't know how to use `scale_shape` (in the first instance), because it `scale_shape` cannot take `values` as an argument. So when I reply with the following *"I get the following error: Error: unused argument (values = c(15, 16, 17))"*, chatGPT goes back to use the 'scale_fill_manual`.
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             color = as.factor(cyl), 
+             shape = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(name = "Cylinders", palette = "Set2") +
+  scale_shape_manual(
+    name = "Cylinders",
+    breaks = c("4", "6", "8"),
+    labels = c("4", "6", "8"),
+    values = c(15, 16, 17)
+  ) +
+  scale_fill_manual(
+    name = "Cylinders",
+    breaks = c("4", "6", "8"),
+    labels = c("4", "6", "8"),
+    values = c("red", "blue", "green")
+  )
+```
+
+AND FINALLY we have a nice and simple fill with one legend...... but also lots of unnecessary code. So after a few exchanges to make the code more concise this is what came out of it:
+
+``` {webr-r}
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             shape = as.factor(cyl), 
+             color = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(palette = "Set2", 
+                    name = "Cylinders") +
+  scale_shape_manual(name = "Cylinders", 
+                    values = c("4" = 15, 
+                        "6" = 16, 
+                        "8" = 17)) +
+  scale_fill_brewer(palette = "Set2", 
+                    name = "Cylinders")
+
+```
+
+Affter asking to use `scale_shape` instead of `scale_shape_manual`, chatGPT generates:
+
+``` {webr-r}
+
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             shape = as.factor(cyl), 
+             color = as.factor(cyl))) +
+  geom_point(size = 4, stroke = 1) +
+  scale_color_brewer(palette = "Set2", name = "Cylinders") +
+  scale_shape(solid = TRUE, name = "Cylinders")
+
+```
+
+This works nicely, but chatGPT introduces `stroke = 1`, which is not needed here, so again we have unnecessary code. So after I asked *"can I leave out the stroke argument?"* we get the easiest solution and exactly the same solution as I came up with myself **without chatGPT**.
+
+``` {webr-r}
+
+mtcars %>%
+  select(mpg, cyl, disp) %>%
+  ggplot(aes(x = mpg, y = disp, 
+             shape = as.factor(cyl), 
+             color = as.factor(cyl))) +
+  geom_point(size = 4) +
+  scale_color_brewer(palette = "Set2", name = "Cylinders") +
+  scale_shape(solid = TRUE, name = "Cylinders")
+  
+```
+
+Please note, that when building the ggplot example, I did use google (...off course) to get some solutions, I liked the `scale_shape` and `solid=TRUE` solution that I found, because it made the code so concise and I don't like to type in `values` and `breaks` manually.
+
+ChatGPT use in science and coing is just dipping the toe in the water. ChatGPT is likely to better not be used as knowledge database but instead as **"reasoning or infering agents"** <https://www.nature.com/articles/s41591-023-02594-z>. ChatGPT can produce false information, also described as **"hallucinations"** <https://www.nature.com/articles/d41586-023-00816-5>, which makes it difficult to use it for getting knowledge and facts. That said, it can be used to gain knowledge and learn better coding skills. Here is a nice *quick tips* paper from PLOS computational biology on how to *"harness the power of chatGPT"* <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011319>.
+
+
+:::
+
+## Basic R semantics
+
+When starting using R and tidyverse the new language can be daunting. So here is a short primer of common semantics that are often not directly understood from code. 
+
+I took some of these example directly or indirectly from:
+
+<https://uc-r.github.io/basics>
+
+### Assignment
+
+The most common way of assigning in R is the `<-` symbol. Although the `=` works in the same way, it is reserved by R users for other things. I tend to use it for assigning numbers to constants, and it is used in function arguments 
+
+``` {webr-r}
+
+#assignment
+x <- 1
+
+#is the same as:
+x = 1 
+
+#but the <- is preffered
+
+  
+```
+
+
+### Vectors and lists
+
+A `vector` in R is a collectino of items (elements) of the same kind (types). A `list` is a collection of items to can also have different types. We make a vector with `c()` and a list with `list`. The `c` in `c()` apparently stands for `combine` [link](https://stackoverflow.com/questions/11488820/why-use-c-to-define-vector)
+
+``` {webr-r}
+
+#vectors
+x <-  c(1, 2, 3)
+y <-  c ("aap", "noot", "mies")
+x
+y
+
+  
+```
+
+``` {webr-r}
+
+#lists
+x <-  list(1, 2, 3)
+y <-  list("aap", "noot", "mies", 1, c(22, 23, 25))
+x
+y
+
+  
+```
+
+Also, R forces that a vector is of one type. You can see that when you specifiy a vector with numbers and characters eg. `c(1, 2, "1", "2)`. It forces the vector to be of `character` type.
+
+``` {webr-r}
+
+#other vector semantics
+x <- 1:10 
+
+#is the same as
+x <- c(1:10)
+
+#is the same as
+x <- c(1,2,3,4,5,6,7,8,9,10)
+
+#you can multiply all elements of a vector at the same time
+x * 3
+
+# or:
+y <-  3
+x * y
+
+# or:
+x / y
+
+# also adding y to x will add 3 to each element
+x + y 
+
+
+# you can also extend or combine two vectors
+z <- 20:25
+
+c(x, z)
+  
+```
+
+
+Lists form the basis of all other data than vectors. Dataframes are collections of related data with rows and columns and unique columns names and row names (or row numbers). `data.frame` is actually a wrapper around the `list` method.`Tibbles` are the tidyverse equivalent of `dataframes` with some more handy properties over dataframes. A 'list' can have names items or not.
+
+``` {webr-r}
+
+#a list without named items
+my_list <- list(1:10, letters[1:10], LETTERS[1:10])
+
+#a list with named items
+my_list <- list(my_numbers = 1:10, 
+                my_lowercase = letters[1:10], 
+                my_uppercase = LETTERS[1:10])
+
+#this almost looks like a table, it only is not in a matrix format
+
+#turning the list into a dataframe generates a table
+as.data.frame(my_list)
+
+#which is similar to making it a tibble
+as_tibble(my_list)
+
+#when the columns are not of the same length the df or tibble
+#cannot be generated
+my_list_2 <- list(my_numbers = 1:10, 
+                my_lowercase = letters[1:10], 
+                my_uppercase = LETTERS[1:9])
+
+as.data.frame(my_list_2)
+
+  
+```
+
+### Common semantics 
+
+R language is different from other programming languages, and when starting out learning R there are some rules and common practices.
+
+### ~ (the "tilde")
+
+``` {webr-r}
+
+#the primary use case is to separate the left hand side
+#with the right hand side in a formula
+
+y ~ a*x+ b
+
+#the ~ is also used in the ggplot facet_wrap or facet_grid
+#it can be read as "by"
+# separate the ggplot "by" cyl
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point()+
+        facet_wrap(~cyl)
+
+
+  
+```
+
+### + (the plus)
+
+Apart from the simple arithmetic addition `+` is also used in the ggplot functions. It adds the multiple layers to each ggplot
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    ggplot(aes(x = mpg, y = disp))+
+        geom_point()+
+        geom_line()+
+        geom_boxplot()+
+        labs(title = "Crazy plot")
+
+  
+```
+
+### %>% (the pipe)
+
+The `%>%` is used to forward an object to another function or expression. It was first introduced in the `magrittr` package and is now also introduced in base R as the `|>` pipe, which are now identical. See [blogpost](http://adolfoalvarez.cl/blog/2021-09-16-plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/) for more info.
+
+``` {webr-r}
+
+mtcars %>% 
+    select(mpg, cyl, disp) %>%
+    mutate(new_column = mpg*cyl) %>% 
+    filter(new_column > 130)
+  
+```
+
+### == (equal to)
+
+The `==` is the equal to operator. It is different than `=` which is used only for assignment.
+
+``` {webr-r}
+
+#the equal to is validating whether the left hand side
+#is the same as the right hand side and its output is TRUE or FALSE
+7 == 7
+#generates TRUE wheres
+6 == 7 
+#generates FALSE
+  
+```
+
+### aes (aesthetics in ggplot)
+
+The `aes` is important for telling the ggplot what to plot. `aes` are the aesthetics of the plot that need to mapped to data. So the ggplot needs `data` and `mappings`.
+
+The `ggplot` acronym is actually coming from the `grammar of graphics`, which is a book "The grammar of graphics" by Leland Wilkinson, and was used by Hadley Wickham to make the `ggplot` package in 2005.
+
+A `ggplot` consists of: 
+- data
+- aestehtic mappings (like x, y, shape, color etc)
+- geometric objects (like points, lines etc)
+- statistical transformations (stat_smooth)
+- scales
+- coordinate systems
+- themes and layouts
+- faceting
+
+
+``` {webr-r}
+
+#ggplot basics with one geometric object "geom_point" 
+#and several aesthetics
+  ggplot(data = mtcars,
+         mapping = aes(x = mpg, 
+                       y = disp,
+                       color = hp,
+                       shape = as.factor(cyl))) +
+  geom_point()
+
+```
+
+### %in% (match operator)
+
+This is handy to check and filter specific elements from a vector
+
+``` {webr-r}
+
+my_groups <- c("50.000", "100.000", "150.000")
+
+"50.000" %in% my_groups #generates TRUE
+
+#and the other way around
+my_groups %in% c("50.000", "100.000")
+
+#this is usefull when filtering specific elements in a tibble
+iris %>% 
+  filter(species %in% c("setosa", "virginica"))
+
+```
+
+
+# Practical tips
+
+## Running your code
+
+Webr code in the browser can be run as a complete code block by clicking on the `Run code` button when the webr status is `Ready!`, right above the block.
+
+![Screenshot of a code block that is ready to run](book_images/runcode.png)
+
+Another option is to select a line of code (or more lines) and press `command or ctrl enter`. This will execute only the line or lines that you have selected.
+
+## Simple troubleshooting your pipelines and ggplots
+
+It happens that your code is not right away typed in perfectly, so you will get errors and warnings. It is good practice to break down your full code block or pipe into parts and observe after which line of code the code is not working properly.
+
+
+## Building your data visualisation step by step
+
+Let's take a built-in R dataset `USArrests`. We want to visualize how the relative number of murders in the state Massachusetts relates to the other states with the highest urban population in those state. In the dataset, the `murder` column represents the `number of murders per 100.000 residents`
+
+``` {webr-r}
+
+USArrests 
+
+head(USArrests)
+
+glimpse(USArrests)
+                 
+#please note that the states are listed as rownames. The glimpse does not show the rownames!
+```
+
+::: callout-tip
+#### Exercise x
+
+Make a plot that addresses the above dataviz problem.
+
+``` {webr-r}
+
+USArrests #%>% 
+  #......
+  #......
+  #......
+  #......
+  #ggplot.....
+    #.......
+    #etc
+```
+
+::: {.callout-note collapse="true"}
+#### HINTS
+
+Hints:
+
+Do the following in your coding:
+
+* `glimpse` at the data and look at the top5 rows using `head()`
+* use `tibble::rownames_to_column()` to make a separate column called `states`
+* clean the column names using `janitor::clean_names()`
+* turn the datatable into a `tibble` using 'as_tibble'
+* take only the the top states by using a filter on the urban population (take it higher than 74)
+* plot the data using a `geom_col`
+* label the x axis and not the y-axis
+* highlight the massachusetts column using a separate `geom_col` layer, were you put a filter on the original data by using in the `geom_col` a call to `data = . %>% filter(str_detect(states, "Mass)). Also give this bar a red color.
+* apply a nice theme so that there are only x axis grid lines and no lines for y and x axis.
+* Also make sure that x-axis starts at zero
+
+Include all these aspects step by step.
+
+
+:::
+
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise x
+
+``` {webr-r}
+mUSArrests %>%
+  tibble::rownames_to_column(var = "states") %>% 
+  janitor::clean_names() %>%
+  as_tibble() %>% 
+  filter(urban_pop > 74) %>% 
+  ggplot(aes( x = murder, 
+              y = forcats::fct_reorder(states, murder)))+
+    geom_col(fill = "grey70")+
+    geom_col(data = . %>% 
+               filter(stringr::str_detect(states, "Mass")),
+             fill = "red")+
+    labs(y = "",
+          x = "number of murders per 100.000 residents")+
+    scale_x_continuous(expand = c(0,0))+
+    theme_minimal(base_size = 18)+
+    theme(panel.grid.major.y = element_blank())
+```
+:::
+
+
+
+### Find your info online and in documentation
+
+R has so many functions that it is impossible to know everything by heart. So documentation of functions and the internet are always your best friend. 
+
+`Stackexhange` is an excellent resource. Almost 90 to 99% of your questions related to how you should use your R and tidy functions has been asked before by others. THe nice thing is that the active coding community put those questions with reproducible code in Stackexchange. More importantly, almost all questions has been accurately answered in multiple ways. 
+
+Other resources that come up more often in my search results are either forums on `POSIT community`, `Reddit`, or `Github discussions or issues` can also be usefull, but these are more forum-like comments, with not such a good solvability structure as stackexchange.
+
+Then there are many more resources that somehow scrape the internet and collect basic info. Most of the time the info is correct but too simplistic. Not real issues are tackled. These are sites like `geeksforgeeks`, `datanovia`, `towardsdatascience`, some have better info then others, but most of the time these have commercial activities and in the end want to sell you courses or get your clicks.
+
+### R and tidyverse documentation
+
+All functions in R and tidyverse are accurately documented. All its arguments are described and especially the `examples` that are given are really helpful. Packages have often even more documentation called `vignettes` that explain certatin topics and contexts on how and when to use the functions.
+
+### Style and layout
+
+Writing your code benefits from proper readability. Just like we layout our texts, manuscripts and excel data files, we also need a good layout for our code.
+
+
+``` {webr-r}
+
+# NOT VERY READABLE (but runnable )
+  ggplot(data=mtcars,   mapping=aes.   (x = mpg,y   = disp,
+color = hp,shape =             as.factor(cyl))         ) +geom_point()
+
+```
+
+There are mulitple ways to organize your code, I try to adhere to:
+- short lines (max 60 characters per line)
+- indent after first line
+- indent after ggplot
+- each next function call aligns with the above function
+- each argument aligns with the previous argument
+- each ggplot layer gets its own line
+- I put the x and y aesthetics for ggplot mapping on one line
+
+Other good practices are:
+- use the package name before a function, like `dplyr::mutate`
+- use comments to annotate the code, when you put a `#` before it, it is not executed
+
+
+So here is an example on what not to do and its corrections
+
+``` {webr-r}
+
+#NOT GOOD
+iris %>% 
+as_tibble() %>% janitor::clean_names() %>% 
+filter(species 
+       %in% c("setosa", "virginica")) %>% 
+        ggplot(aes(x = sepal_length, y = sepal_width,group = petal_length, color = petal_width))+
+geom_point()+ geom_line() +
+    theme_bw(base_size = 16)
+
+#GOOD
+iris %>% 
+  as_tibble() %>% 
+  janitor::clean_names() %>%
+  filter(species %in% c("setosa", "virginica")) %>% 
+  ggplot(aes(x = sepal_length, y = sepal_width,
+             group = petal_length, 
+             color = petal_width))+
+    geom_point()+
+    geom_line() +
+    theme_bw(base_size = 16)
+
+```
+
+
+

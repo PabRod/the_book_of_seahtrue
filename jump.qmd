@@ -1,0 +1,9 @@
+---
+title: Jump into the water
+editor: 
+  mode: source  
+---
+
+In the section, we jump into the water. We learn how to swim in R code and get ourselves familiar with using R for data handling and plotting. We will use first a dataset from R itself and secondly work with a Seahorse data file. There are exercises, with solutions, as well.
+
+

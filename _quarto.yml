@@ -8,15 +8,25 @@ book:
 
   chapters:
     - index.qmd
+    - part: jump.qmd
+      chapters:
+      - jump_intro.qmd
+      - jump_essentials.qmd
+      - jump_cars.qmd
+      - jump_seahorse.qmd
+      - jump_summary.qmd
     - part: swim.qmd
       chapters:
-      - swim_intro.qmd
-      - swim_cars.qmd
-      - swim_seahorse.qmd
-      - references.qmd
-    - part: intro.qmd
+      - swim_functions.qmd
+      - swim_outputs.qmd
+      - swim_summary.qmd
+    - part: dive.qmd
       chapters:
-        - intro.qmd
+      - dive_alone.qmd
+      - dive_together.qmd
+    - part: surf.qmd
+      chapters:
+        - surf_seahtrue.qmd
 
   sidebar:
     search: true

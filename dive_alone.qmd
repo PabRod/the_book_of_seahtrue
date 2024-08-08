@@ -1,0 +1,1015 @@
+---
+title: "Single experiment"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+
+---
+
+## Plate map
+
+To dive a bit deeper into a single `seahtrue` experiment, we will first generate an overview of what the experimental set-up was.
+
+Let's load the data first
+
+``` {webr-r}
+
+library(tidyverse)
+
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/develop-gerwin/data/"
+
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    "seahtrue_output_donor_A.rda"), 
+  "seahtrue_output_donor_A.rda")
+
+load("seahtrue_output_donor_A.rda")
+
+
+```
+
+Next, we make a theme that we can use for the heatmap
+
+``` {webr-r}
+theme_htmp <- function(){
+    theme_bw(base_size = 15) %+replace% 
+      theme(panel.grid.minor.x = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank(),
+            axis.text.x = element_text(size = rel(1.3),
+                                       hjust = 0.5, 
+                                       vjust = 0),
+            axis.text.y = element_text(size = rel(1.3), 
+                                       hjust = 0.5, 
+                                       vjust = 0.5),
+            legend.position="right",
+            legend.margin=margin(0,0,0,0),
+            legend.box.margin=margin(-10,0,-10,-10)
+            )}
+
+```
+
+
+Then we make a nice default heatmap with the `geom_tile` function.
+
+``` {webr-r}
+seahtrue_output_donor_A %>% 
+    pluck("rate_data", 1)%>%
+    separate(well, 
+             into = c("row", "column"), 
+             sep = 1, 
+             convert = TRUE) %>% 
+    ggplot(aes(x = column, y = forcats::fct_rev(row))) +
+      geom_tile(aes(
+        fill = group), 
+        color = "grey50", 
+        show.legend = TRUE)+
+      scale_x_continuous(limits= c(0.5, 12.5),
+                         breaks = c(1:12),
+                         position = "top",
+                         expand = c(0,0))+
+      scale_y_discrete(expand = c(0,0))+
+      labs(fill = "group")+
+      theme_htmp()
+
+```
+
+
+The default ggplot colors are quite colorfull, but might hurt your eyes... If we want colors that are different than the default ggplot colors, and we want the legend to be nicely in order we need to add some additional code.
+
+``` {webr-r}
+
+#first get number of groups 
+  number_of_groups <- 
+    seahtrue_output_donor_A %>% 
+      pluck("rate_data",1) %>%
+      pull(group) %>% unique() %>%
+      length()
+
+#next make a color pallette that matches
+#the number of groups
+  group_colors <- 
+    colorRampPalette(
+      RColorBrewer::brewer.pal(8, "BrBG"))(number_of_groups)
+
+#plot a platemap
+  seahtrue_output_donor_A %>% 
+    pluck("rate_data", 1)%>%
+    filter(group != "Background") %>%
+    separate(well, 
+             into = c("row", "column"), 
+             sep = 1, 
+             convert = TRUE) %>% 
+    ggplot(aes(x = column, y = forcats::fct_rev(row))) +
+      geom_tile(aes(
+        fill = forcats::fct_reorder(group, 
+                                    parse_number(group))), 
+        color = "grey50", 
+        show.legend = TRUE)+
+      scale_fill_manual(values= group_colors)+
+      scale_x_continuous(limits= c(0.5, 12.5),
+                         breaks = c(1:12),
+                         position = "top",
+                         expand = c(0,0))+
+      scale_y_discrete(expand = c(0,0))+
+      labs(fill = "group")+
+      theme_htmp()
+
+```
+
+Another option would be to manually arrange the factors in a way that suits you best. 
+
+``` {webr-r}
+
+group_order <- seahtrue_output_donor_A %>% 
+    pluck("rate_data",1) %>%
+    pull(group) %>% unique()
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data", 1)%>%
+  separate(well, 
+           into = c("row", "column"), 
+           sep = 1, 
+           convert = TRUE) %>% 
+  ggplot(aes(x = column, y = forcats::fct_rev(row))) +
+    geom_tile(aes(
+      fill = group), 
+      color = "grey50", 
+      show.legend = TRUE)+
+    scale_fill_manual(values= group_colors,
+                      breaks = group_order)+ #added here
+    scale_x_continuous(limits= c(0.5, 12.5),
+                       breaks = c(1:12),
+                       position = "top",
+                       expand = c(0,0))+
+    scale_y_discrete(expand = c(0,0))+
+    labs(fill = "group")+
+    theme_htmp()
+```
+
+## Background
+
+In Seahorse experiments the corners of the plate are by default assigned as `Background` wells, meaning that in these wells there is no sample but does have the same conditions and culture medium as your sample wells. Background wells need to be checked for outliers. This is not obvious from the Wave software interface, because the backgroung is by default substracted and users will never see the actual background data, unless they really select for it in the point-and-click software Wave. So let's make some plots of the raw background O2 data.
+
+We will now use the `raw_data` table for plotting, and we assume you allready loaded the data file above in this session.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  filter(group == "Background") %>%
+  ggplot(aes(x = minutes, y = O2_mmHg, color = well))+
+    geom_point()+
+    theme_bw(base_size = 16)+
+    labs(x = "time (min)",
+         y = "O2 (mmHg)")
+
+
+```
+
+This is a nice plot of the background O2 readings. It does look weird, especailly beause there is one well `H01` which has a comppletely different trend then the other wells. This might be suspected as a technical outlier. Possibly in this well there was not enough culture medium or the sensor was damaged. The lab details and observations should be aligned with the outlier calling to make sure to not erroneously flag a well as an outlier.
+
+To make an even better visual representation of the background and to account for the different aspects how the background well data behaves we can plot only the first ticks of each measurement. We will also shift here now to the fluorescence readings of the Seahorse. Since the O2 is derived from fluorescence values in our experiments it would be good to really look at the most raw data that we get out of our experiment. The fluorescence is given as the parameter `O2_em_corr`
+
+We have a plotting function that automates this.
+
+``` {webr-r}
+plot_raw_BKGD <- function(total_df, var, flnme){
+  
+  theme_maxTick <- function(){
+    theme_classic(base_size = 18) %+replace% 
+      theme(panel.grid.minor.x = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            panel.grid.major.y = element_blank(),
+            panel.border = element_blank(),
+            axis.ticks.x = element_line(),
+            axis.ticks.y = element_line(),
+            axis.line.y = element_line(),
+            legend.text = element_text(size = rel(0.7)),
+            legend.title = element_text(size = rel(0.7)),
+            axis.title.x = element_text(size = rel(0.8)),
+            axis.title.y = element_text(size = rel(0.8), 
+                                        angle = 90)
+      )
+  }
+  
+  custom.col <- c("#D16103","#4E84C4","#52854C","#C4961A",
+                  "#FFDB6D", "#C4961A", "#F4EDCA", 
+                  "#D16103","#4E84C4","#52854C","#C4961A", 
+                  "#FFDB6D", "#C4961A", "#F4EDCA"  )
+  
+  df<- total_df %>% filter(group == "Background") %>% 
+    select(measurement, well, group,
+           timescale, minutes,tick, emission = all_of(var))
+  df <- df[!is.na(df$emission), ]
+  
+  O2_targetEmission <- 12500 
+  pH_targetEmission <- 30000 
+  O2_target_mmHg <- 151 
+  
+  targetEMS <- 0
+  
+  if (var == "O2_em_corr"){
+    targetEMS<-  O2_targetEmission
+    ylabel = "emission (AU)"} 
+  if (var == "pH_em_corr") {
+    targetEMS <- pH_targetEmission
+    ylabel = "emission (AU)"}
+  if (var == "O2_mmHg") {
+    targetEMS <- O2_target_mmHg
+    ylabel = "O2 (mmHg)"}
+  
+  if ((targetEMS == 0)){ 
+    targetEMS <- O2_target_mmHg
+    ylabel = "O2 (mmHg)"}
+  
+  ggplot(data = df)+
+    geom_point(mapping = aes(x = minutes, y = emission, 
+                             color  = well), 
+               alpha = 0.5, size = 3)+
+    geom_hline(yintercept = targetEMS, 
+               linetype = "dashed", color = "#D16103")+
+    theme_maxTick()+
+    scale_color_manual(values = custom.col)+
+    labs(title = var,
+         subtitle = flnme,
+         x = "time (min)",
+         y = ylabel)+
+    theme(plot.title = element_text(hjust = 0.5, 
+                                    size = 18),
+          plot.subtitle = element_text(hjust = 0.5, 
+                                       size = 10))
+  
+}
+  
+
+
+
+```
+
+We can use this function when we provide the right arguments. The argument option for the `var` are: `O2_em_corr`, `pH_em_corr` and `O2_mmHg`.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  plot_raw_BKGD(total_df = ., 
+                var = "O2_em_corr", 
+                flnme = seahtrue_output_donor_A %>% 
+                    pluck("plate_id", 1))
+
+
+
+```
+
+::: callout-tip
+#### Exercise 1
+
+To calculate O2 from emission, Seahorse uses the Stern-Volmer equation. Find out (using google or chatGPT) what the stern-volmer equation is and write it in the form of a function. Use the arguments `x`, `KSV`, and `F0`. 
+
+You can also use the Gerenscer et al. paper that describes the calculations. The method and algorithms described in this Analytical Chemistry paper from 2009 are still used today. [Gerencser et al. Anal Chem 2009](10.1021/ac900881z)
+
+``` {webr-r}
+
+# stern_volmer <- function(x, KSV, F0){
+
+
+#}
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 1
+
+``` {webr-r}
+
+stern_volmer <- function(x, KSV, F0){
+
+  O2 = (1/KSV)*((F0/x)-1)
+}
+
+
+```
+
+Where `x` is the emission (`O2_em_corr`), `KSV` is a constant, the stern-volmer konstant, and `F0` is the emission at zero oxygen. The values of these two constants is are unique to the cartridge that you used during your experiment. Seahorse provides these numbers when updating your Wave software and matches them via a barcode read on the cartridge each run. 
+
+:::
+
+::: callout-tip
+#### Exercise 2
+
+The `KSV` and `F0` are provided in the assay configuration sheet of the excel output. Seahtrue puts that information in the `assay_info` table. You can access it using the `pluck` function. In this case you have to use `pluck` two times, first to get to the `assay_info` and next to the `KSV` or `F0`
+
+``` {webr-r}
+
+#seahtrue_output_donor_A %>% 
+
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 2
+
+``` {webr-r}
+
+KSV <- seahtrue_output_donor_A %>% 
+  pluck("assay_info", 1) %>%
+  pluck("KSV", 1)
+
+F0 <- seahtrue_output_donor_A %>% 
+  pluck("assay_info", 1) %>%
+  pluck("F0", 1)
+
+
+```
+
+
+:::
+
+::: callout-tip
+#### Exercise 3
+
+Now use the two constants `KSV` and `F0`, and the function `stern_volmer` to calculate the `O2` from `O2_em_corr`. Also use `select(well, measurement, tick, O2_mmHg, O2)` to compare the `O2` with the `O2_mmHg` in the output.
+
+``` {webr-r}
+
+#seahtrue_output_donor_A %>% 
+#  pluck("raw_data", 1) %>%
+
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 3
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  mutate(O2 = stern_volmer(O2_em_corr, KSV, F0)) %>% 
+  #use this select to compare the output
+  select(well, measurement, tick, O2_mmHg, O2)
+
+
+```
+
+:::
+
+::: callout-tip
+#### Exercise 4
+
+Plot the `O2` background values that you just calculated using the `plot_raw_BKGD` function. Compare the plot to when plotting the `O2_mmHg` that was derived from the Seahorse output xlsx.
+
+``` {webr-r}
+
+#seahtrue_output_donor_A %>% 
+#  pluck("raw_data", 1) %>%
+
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 4
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  mutate(O2 = stern_volmer(O2_em_corr, KSV, F0)) %>%
+  plot_raw_BKGD(total_df = ., 
+                var = "O2", 
+                flnme = seahtrue_output_donor_A %>% 
+                    pluck("plate_id", 1))
+
+
+```
+
+:::
+
+::: callout-tip
+#### Exercise 5
+
+Apparently the `O2_mmHg` is different from our own calculated `O2` concentrations. When looking at the `O2_mmHg` background plot it looks like that these O2 values are also corrected for a background. Let's see if that is indeed the case. 
+
+Seahorse Wave substracts the mean background from all samples. So the mean `O2_mmHg` of the "`Background` group is substracted from all samples wells (and background wells apparently). We can also do that with our `seahtrue` data. We should take care of what we need to `summarize` here, each `tick` is a unique measurement in the `raw_data`, do let's take `tick` as the `.by` parameter 
+
+``` {webr-r}
+
+O2_bkgd <- 
+  seahtrue_output_donor_A %>% 
+    pluck("raw_data", 1) %>%
+    filter(group == "Background") %>%
+    summarize(O2_bkgd = 
+                mean(O2_mmHg), 
+              .by = tick)
+
+#add the O2_bkgd to our seahtrue_output_donor_A
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  left_join(O2_bkgd, by = c("tick"))
+  
+```
+
+Now we need to substract the background O2 from all other wells and the backgrounds wells themselves. 
+
+The way this is done in the Seahorse algorithm is to take into account the ambient O2 levels. Basically what Seahorse calculates is the following:
+
+``` {webr-r}
+
+correct_O2_for_background <-function(O2, O2_bkgd){
+  O2_0_mmHg = 151.6900241
+  O2_corrected <- O2 - O2_bkgd + O2_0_mmHg
+}
+
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  left_join(O2_bkgd, by = c("tick")) %>%
+  mutate(O2_corrected = 
+           correct_O2_for_background(O2_mmHg, O2_bkgd)) %>%
+  select(well, tick, O2_mmHg, O2_corrected)
+
+
+```
+
+Now compare the `O2_corrected` with the original `O2_mmHg`. Do this in two ways. 1) make a ggplot with the `O2_corrected` on x-axis and `O2_mmHg` on the y-axis. and 2) use the `plot_raw_BKGD` function with `O2_corrected` and compare with the output from the `O2_mmHg` `plot_raw_BKGD` plot
+
+
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 5
+
+``` {webr-r}
+
+#solution 1
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  left_join(O2_bkgd, by = c("tick")) %>%
+  mutate(O2_corrected = 
+           correct_O2_for_background(O2_mmHg, O2_bkgd)) %>%
+  filter(group == "Background") %>% 
+  ggplot(aes(x = O2_corrected, y = O2_mmHg,
+             color = well))+
+    geom_point()
+
+
+
+```
+
+``` {webr-r}
+
+#solution 2
+seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  left_join(O2_bkgd, by = c("tick")) %>%
+  mutate(O2_corrected = 
+           correct_O2_for_background(O2_mmHg, O2_bkgd)) %>%
+  plot_raw_BKGD(total_df = ., 
+                var = "O2_corrected", 
+                flnme = seahtrue_output_donor_A %>% 
+                    pluck("plate_id", 1))
+
+
+```
+Although the values are not identical, they are pretty close. Indicating that the O2_mmHg background data is likely also corrected for background in this dataset.
+
+:::
+
+## Low signals
+
+Sometimes we don't have much sample. In most cases the sample is cells, and with low cell number the O2 consumption and extracellular acidification can be low. Seahorse defines an pretty arbitrary cut-off for basal respiration at 20 pmol/min. Below this value OCR becomes less reliable. 
+
+In the loaded experiment `seahtrue_output_donor_A`, we have a group labeled with `50.000`. In these wells we only have 50.000 cells in each well, which makes its signal difficult to detect.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data", 1) %>%
+  filter(group %in% c("Background","50.000", "200.000")) %>%
+    ggplot(aes(x = time_wave, y = OCR_wave_bc,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 and 50.000 cells per well",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+           
+
+
+```
+
+Please notice that the OCR signal for the `50.000` group is definitely below 20 pmol/min.
+
+What if we want to investigate in more detail how our signals are for our samples with this low respiration? 
+
+We can make use of the `raw_data` again and plot the `background` O2 signal with the `sample` O2 signal in one plot. Since in the previous section we saw that O2 signals for the background wells were also corrected for background (?!), we will work with our own calculated O2 levels using the `stern_volmer` function we wrote in the previous section.
+
+Also, we will use quite a big plotting function for this. It offers some flexibility on whether we want to plot means and/or scale the data. Also we can select specific wells and which measurements. 
+
+``` {webr-r}
+plot_raw_whichGroup_dots <- 
+  function(var, total_df, flnme, groupString, 
+          plot_the_mean, y_label, measurementString, 
+          wellString, targetEMS, scalingON, 
+          lgdWellName, ylim_lo,ylim_hi){
+    
+  # var = "O2_em_corr"
+  # flnme = fileName
+  # groupString = grp
+  # plot_the_mean = TRUE
+  # total_df = XFe96data
+  # measurementString = msrs
+  # wellString = wlls
+  # y_label = "emission"
+  #targetEMS = 12500
+  # scalingON = TRUE
+  # lgdWellName = "F01"
+  
+  theme_maxTick <- function(){
+    theme_classic(base_size = 18) %+replace% 
+      theme(panel.grid.minor.x = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            panel.grid.major.y = element_blank(),
+            panel.border = element_blank(),
+            axis.ticks.x = element_line(),
+            axis.ticks.y = element_line(),
+            axis.line.y = element_line(),
+            legend.text = element_text(size = rel(0.7)),
+            legend.title = element_text(size = rel(0.7)),
+            axis.title.x = element_text(size = rel(0.8)),
+            axis.title.y = element_text(size = rel(0.8), angle = 90)
+      )
+  }
+  
+  custom.col <- c("#D16103","#4E84C4","#52854C","#C4961A", 
+                  "#FFDB6D", "#C4961A", "#F4EDCA", 
+                  "#D16103","#4E84C4","#52854C","#C4961A",  
+                  "#FFDB6D", "#C4961A", "#F4EDCA"  )
+  
+  # first item in groupString is supposed to be Background! 
+  # (else legend is not correct)
+  
+  df<- total_df %>% 
+    filter(group %in% groupString) %>% 
+    filter(measurement %in% measurementString) %>% 
+    filter(well %in% wellString) %>% 
+    select(measurement, well, group,timescale, 
+           minutes,tick, param_toPlot = all_of(var))
+  
+  if (scalingON == TRUE){
+    
+    firstTicks <- 
+      df %>% 
+      group_by(well, measurement) %>% 
+      slice(1) %>% 
+      mutate(scaleFactor = targetEMS/param_toPlot) %>% 
+      select(well, measurement, scaleFactor)
+    
+    df <- left_join(df, firstTicks, 
+                    by = c("measurement", "well"))
+    df <- df %>% 
+      mutate(newParam = param_toPlot*scaleFactor) %>% 
+      select(!param_toPlot) 
+    names(df)[names(df) == 'newParam'] <- 'param_toPlot'
+  }
+  
+  #levels(as.factor(df$group))
+  #df$group <- factor(df$group, levels = grp)
+  
+  df_mean <- df %>% 
+    group_by(group, minutes) %>% 
+    summarize(mn= mean(param_toPlot),
+              sd = sd(param_toPlot))
+  
+  
+  df_mean <- df_mean %>% 
+    arrange(desc(group))
+  df <- df %>% 
+    arrange(desc(group))
+  
+  
+  if (plot_the_mean == TRUE){
+    ggplot(data = df_mean)+
+      geom_errorbar(mapping = aes(x = minutes,
+                                  y = mn,
+                                  ymin = mn - sd,
+                                  ymax = mn + sd),
+                    width = 0,
+                    color = "#293352",
+                    alpha = 0.6,
+                    size = 0.3)+
+      geom_point(mapping = aes(x = minutes, y = mn, 
+                               color  = group), 
+                 alpha = 0.8, size = 3)+
+      geom_hline(yintercept = targetEMS, 
+                 linetype = "dashed", 
+                 color = "#D16103")+
+      scale_color_manual(name = "well", 
+                         breaks = groupString, 
+                         values = custom.col,
+                         labels = c("Background", 
+                                    lgdWellName))+
+      theme_maxTick()+
+      labs(title = var,
+           subtitle = flnme,
+           x = "time (min)",
+           y = y_label)+
+      theme(plot.title = element_text(hjust = 0.5, 
+                                      size = 18),
+            plot.subtitle = element_text(hjust = 0.5, 
+                                         size = 10))+
+      ylim(ylim_lo, ylim_hi)
+    
+  } else{
+    ggplot(data = df)+
+      geom_point(mapping = aes(x = minutes, 
+                               y = param_toPlot, 
+                               color  = group), 
+                 alpha = 0.8, size = 3)+
+      #geom_line(aes(x = minutes, y = param_toPlot, 
+      # color  = group, group = well), 
+      # alpha = 0.6, size = 1)+
+      geom_hline(yintercept = targetEMS, 
+                 linetype = "dashed", 
+                 color = "#D16103")+
+      scale_color_manual(name = "well",
+                         breaks = groupString,
+                         values = custom.col,
+                         labels = c("Background", 
+                                    lgdWellName))+
+      theme_maxTick()+
+      labs(title = var,
+           subtitle = flnme,
+           x = "time (min)",
+           y = y_label)+
+      theme(plot.title = element_text(hjust = 0.5, 
+                                      size = 18),
+            plot.subtitle = element_text(hjust = 0.5, 
+                                         size = 10))+
+      ylim(ylim_lo, ylim_hi)
+    
+    
+  }
+  
+}
+
+```
+
+Let's explore this huge function (with not so tidy coding in it....), by using it:
+
+``` {webr-r}
+#define the df to plot
+  #don't forget to have the stern_volmer function
+  #and the KSV and F0 loaded for this
+XFe96data <- seahtrue_output_donor_A %>% 
+  pluck("raw_data", 1) %>%
+  mutate(O2 = stern_volmer(O2_em_corr, KSV, F0))
+
+
+#set input parameters for function
+  raw_em_corr <- c("O2")
+  emission_target = 151.67
+  label <- c("O2 (mmHg)")
+    
+  ylim_lo <- 150
+  ylim_hi <- 156
+
+  fileName <- "well D02"
+
+  grp <- c("Background", "50.000")
+
+  background_wells <- c("A01", "A12", "H01", "H12")
+  sample_wells <- c("D02")
+  wlls <- c(sample_wells, background_wells)
+  msrs <- c("1", "2", "3")
+
+  legendWellName <- "D02"
+
+
+#call function
+plot_raw_whichGroup_dots(raw_em_corr, 
+                        XFe96data, 
+                        fileName, 
+                        grp, 
+                        plot_the_mean = TRUE, 
+                        label, 
+                        msrs, 
+                        wlls, 
+                        emission_target, 
+                        scalingON = TRUE, 
+                        legendWellName,
+                        ylim_lo,
+                        ylim_hi)
+
+
+```
+
+
+You can see in this plot that background O2 levels rise in each measurment. This drift is consistently seen in all instruments and experimental condtions. The upward drift in O2, is also why OCRs for background wells are often negative in your Seahorse software Wave graphs (when you point-and-click to have the background not substracted). The explanation that Gerenscer et al. gave for the drift was that either 1) temperature is not stable during a measurement and the fluorescent sensors are temperature sensitive or 2) that O2 levels in the microchamber that is formed when probe is at its measuring position is entering from the plastic or culture medium above. Both reasons are debatable I think. 
+
+Although the O2 levels of backgrounds increase, it can be seen that the O2 levels of well `D02` increase less. Meaning that there oxygen consumption is higher than the background.
+
+::: callout-tip
+#### Exercise 6
+
+Change the inputs for the `plot_raw_whichGroup_dots` (in a meaningful way), to plot the 1) `O2_em_corr`, 2) plot another well `D04` (please note that you also have change the group name because it is from the `100.000` group)
+
+``` {webr-r}
+
+#set the inputs for the plot_raw_whichGroup_dots function
+
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 6
+
+``` {webr-r}
+
+#changing to O2 emission
+raw_em_corr <- c("O2_em_corr")
+emission_target = 12500
+label <- c("emission (AU)")
+
+ylim_lo <- 12000
+ylim_hi <- 12800
+
+#  changing well
+sample_wells <- c("D04")
+wlls <- c(sample_wells, background_wells)
+grp <- c("Background", "100.000")
+legendWellNName <- "D04"
+fileName <- "well D04"
+
+
+
+```
+
+:::
+
+
+## Plotting basal and maximal respiration
+
+
+Pluck the `injection_info` table from the `seahtrue_output_donor_A` dataset to see what how the injections were defined in the experimental set-up before running the seahorse.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("injection_info",1)
+
+
+```
+
+This is not a typical mito-stress test experiment, where we inject oligomycin, FCCP and antimycinA/rotenone sequentially. Instead we inject only FCCP and antimycinA/rotenone.
+
+To get the maximal and basal respiration out of the ocr rate table, we need to do some calculations. We first make some assumptions and defintions:
+
+> We call each interval between two injections or between start and an injection or between an injection and the end a `phase`
+>
+> Each phase has a unique name that is named after the injection that was last. The first phase after the start is called `init_ocr` and we also typically have the phases `om_ocr`, `fccp_ocr` and `amrot_ocr`. Phases are marked with either `_ocr` or `_ecar`, because these are distinct parameters.
+>
+> To calculate respiration parameters, like basal respiration (= basal_ocr), we define the following:
+>
+> * basal_ocr = init_ocr - amrot_ocr.
+> * max_ocr = fccp_ocr - amrot_ocr
+> * spare_ocr = fccp_ocr - init_ocr
+> * proton_leak = om_ocr = amrot_ocr
+> * atp_linked = init_ocr - om_ocr
+>
+> We also use indices to have relative parameters:
+>
+> * spare_ocr_index = (spare_ocr / basal_ocr)*100
+> * basal_ocr_index = (basal_ocr / max_ocr)*100
+> * leak_index = (proton_leak / basal_ocr)*100
+> * coupling_index = (atp_linked / basal_ocr)*100) %>%
+>
+> Another important assumption is that we are not using average values to represent each phase, but intead we use a specific measurement. The reason for this is that we assume that for all phases, except FCCP, three measurements are needed in time to get to steady-state. For FCCP injection, we assume that it reaches steady-state fast, or at least its maximal ocr, so we take the first measurement after injection as the measurement representing the FCCP phase.
+
+
+Let's now put that into R code. We call the type of experiment we did in this dataset a `maximal capacity` (`maxcap`) test.
+
+We also injected monensin, which can maximize ECAR, but we don't need it for OCR calculations.
+
+
+``` {webr-r}
+
+# first define which timepoints are what
+param_set_maxcap_ocr <- c(init_ocr = "m3",
+                          fccp_ocr = "m4",
+                          amrot_ocr = "m9",
+                          mon_ocr = "m12"
+                         )
+
+#next do some pivoting, renaming and selecting
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>% 
+  select(well, measurement, group, ocr = OCR_wave_bc) %>%
+  pivot_wider(names_from = measurement, names_prefix = "m", values_from = ocr) %>%
+  rename(all_of(param_set_maxcap_ocr)) %>%
+  select(contains(c("wel"," group", "ocr")))
+
+```
+
+
+Now for each well we have the parameters related to the phases that we defined in the parameter set.
+
+Next we want to calculate the respiration parameters and indices.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>% 
+  select(well, measurement, group, ocr = OCR_wave_bc) %>%
+  pivot_wider(names_from = measurement, 
+              names_prefix = "m", 
+              values_from = ocr) %>%
+  rename(all_of(param_set_maxcap_ocr)) %>%
+  select(contains(c("well","group", "ocr"))) %>%
+  #piped here to the mutate
+  mutate(non_mito_ocr = amrot_ocr,
+         basal_ocr = init_ocr - non_mito_ocr,
+         max_ocr = fccp_ocr - amrot_ocr,
+         spare_ocr = max_ocr - basal_ocr,
+         spare_ocr_index = (spare_ocr / max_ocr)*100,
+         basal_ocr_index = (basal_ocr/max_ocr)*100)
+
+```
+
+With this data we can plot our typical basal and maximal bar/scatter plots that we see in our lovely papers, presentations and theses.
+
+``` {webr-r}
+
+webr::install("ggdist")
+
+param_set_maxcap_ocr <- c(init_ocr = "m3",
+                          fccp_ocr = "m4",
+                          amrot_ocr = "m9",
+                          mon_ocr = "m12"
+                         )
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>% 
+  select(well, measurement, group, ocr = OCR_wave_bc) %>%
+  pivot_wider(names_from = measurement, 
+              names_prefix = "m", 
+              values_from = ocr) %>%
+  rename(all_of(param_set_maxcap_ocr)) %>%
+  select(contains(c("well","group", "ocr"))) %>%
+  #piped here to the mutate
+  mutate(non_mito_ocr = amrot_ocr,
+         basal_ocr = init_ocr - non_mito_ocr,
+         max_ocr = fccp_ocr - amrot_ocr,
+         spare_ocr = max_ocr - basal_ocr,
+         spare_ocr_index = (spare_ocr / max_ocr)*100,
+         basal_ocr_index = (basal_ocr/max_ocr)*100) %>%
+  filter(group %in% c("150.000", "250.000")) %>%
+  ggplot(aes(x = group, y = max_ocr, color = group))+
+    geom_bar(data = . %>% 
+                 summarize(median_max_ocr = median(max_ocr), 
+                           .by = group),
+               mapping = aes(
+                 x = forcats::fct_reorder(
+                                    group, 
+                                    parse_number(group)),
+                 y = median_max_ocr,
+                  fill = group), 
+            stat="identity", 
+            alpha=0.4,
+            width=0.2)+
+    ggdist::geom_weave() +
+    ggdist::stat_pointinterval()+
+    colorspace::scale_colour_discrete_divergingx(
+                                    palette = "Geyser",
+                                    rev = FALSE)+
+    colorspace::scale_fill_discrete_divergingx(
+                                    palette = "Geyser", 
+                                    rev = FALSE)+
+    labs(subtitle = "Maximal OCR",
+         x = "",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 18)
+  
+  
+
+
+```
+
+::: callout-tip
+#### Exercise 7
+
+The plot above shows `maximal ocr`. Now make your own plot with 1) `basal_ocr` and 2) all groups except background. Make sure to order the group legend tidyly and have reable x-axis labels.
+
+``` {webr-r}
+
+#use the code block above and change that code
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 7
+
+``` {webr-r}
+
+#solution 1 and 2 together
+#lines with changes marked with #VB
+
+webr::install("ggdist")
+
+param_set_maxcap_ocr <- c(init_ocr = "m3",
+                          fccp_ocr = "m4",
+                          amrot_ocr = "m9",
+                          mon_ocr = "m12"
+                         )
+
+group_order <- seahtrue_output_donor_A %>% #VB
+    pluck("rate_data",1) %>%
+    pull(group) %>% unique()
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>% 
+  select(well, measurement, group, ocr = OCR_wave_bc) %>%
+  pivot_wider(names_from = measurement, 
+              names_prefix = "m", 
+              values_from = ocr) %>%
+  rename(all_of(param_set_maxcap_ocr)) %>%
+  select(contains(c("well","group", "ocr"))) %>%
+  #piped here to the mutate
+  mutate(non_mito_ocr = amrot_ocr,
+         basal_ocr = init_ocr - non_mito_ocr,
+         max_ocr = fccp_ocr - amrot_ocr,
+         spare_ocr = max_ocr - basal_ocr,
+         spare_ocr_index = (spare_ocr / max_ocr)*100,
+         basal_ocr_index = (basal_ocr/max_ocr)*100) %>%
+  filter(group!= c("Background")) %>% #VB
+  ggplot(aes(x = group, y = basal_ocr, color = group))+ #VB
+    geom_bar(data = . %>% 
+                 summarize(
+                  median_basal_ocr = median(basal_ocr), #VB
+                  .by = group),
+             mapping = aes(
+                 x = forcats::fct_reorder(
+                                    group, 
+                                    parse_number(group)),
+                 y = median_basal_ocr, #VB
+                 fill = group), 
+                stat="identity", 
+                alpha=0.4,
+                width=0.4)+ #VB
+    ggdist::geom_weave() +
+    ggdist::stat_pointinterval()+
+    colorspace::scale_colour_discrete_divergingx(
+                                    palette = "Geyser",
+                                    rev = FALSE,
+                                    breaks = 
+                                      group_order
+                                    )+
+    colorspace::scale_fill_discrete_divergingx(
+                                    palette = "Geyser", 
+                                    rev = FALSE,
+                                    breaks = 
+                                      group_order
+                                      )+
+    labs(subtitle = "Basal OCR", #VB
+         x = "",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 18)+
+    theme( #VB
+      axis.text.x = element_text(
+        angle = 45, 
+        vjust = 1, # vertical alignment
+        hjust = 1, # horizontal alignment
+        size = rel(1.2))
+    )
+
+
+
+```
+
+:::

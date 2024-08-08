@@ -1,0 +1,33 @@
+---
+title: "Summary"
+---
+
+## What did we learn?
+
+### Functions
+
+-   Definitions of functions
+-   Function argument
+-   How to build and execute functions
+-   How to use the `dplyr` `mutate` function
+-   Some basic understanding of the `seahtrue` `read_xfplate` functions
+-   Some of the `seahtrue` `preprocess_xfplate` functions
+-   The `run_seahtrue` function
+
+### Outputs
+
+-   What nested tibbles are, and why they are usefull
+-   How to generate nested tibbles
+-   How to use the `purrr` `map` function on nested tibbles
+-   Get familiar with the semantics of the `map` function
+-   The difference between `.by` and `group_by`
+-   How to isolate or `pluck` data from a larger dataset
+-   Get familiar with the `seahtrue` output nested tibble
+-   The different parameters for `time` in a seahorse dataset
+-   How to access the data in `seahtrue` output and use it in ggplot
+
+## What we did not learn?
+
+-   How to run seahtrue on our own data
+-   How all the assertions and input checking in the `seahtrue` package are implemented
+-   More elaborate use cases of the `map` function from the `purrr` package, like `map2` or `map_dbl`

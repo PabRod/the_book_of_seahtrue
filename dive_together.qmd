@@ -1,0 +1,218 @@
+---
+title: "Multiple experiments"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+
+---
+
+## Gimme more plates
+
+The reading and processing that `seahtrue` uses, together with the nested tibble output, has another benefit. It allows for collecting and organizing multiple experiments into one nested tibble. We can do that by loading multiple xlsx files into our working directory, making a file list of those excel file names and mapping the `run_seahtrue` function against the file list. 
+
+For now we will first have a look at how the output looks like. We load the three experiment output from github.
+
+``` {webr-r}
+
+library(tidyverse)
+
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/renv-sync_issue_2/data/"
+
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    "xf_3.rda"), 
+  "xf_3.rda")
+
+load("xf_3.rda")
+
+xf_3
+
+```
+
+
+You can see we have one experiment per row of the tibble . They are labeled with the `plate_id`, `file_path`, and `date` in the first three columns. Since it is in one tibble, we can now `pluck` for example all `raw_data` from the complete tibble:
+
+
+``` {webr-r}
+
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data))
+
+
+```
+
+You see we now have a tibble of almost 2 million rows and 22 columns, nicely and tidyly loaded in our webR/wasm R environment!! How cool is that! Our favorite point-and-click software Excel wouldn't even be able to handle this amount of rows. 
+
+Now we can plot for example the distribution of emission values for each experiment. We use the `ggridges` package for this.
+
+``` {webr-r}
+
+webr::install("ggridges")
+
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group != "Background") %>%
+  ggplot(aes(x = O2_mmHg, y = plate_id))+
+    ggridges::geom_density_ridges()+
+    facet_wrap(~forcats::fct_reorder(group,
+                                    parse_number(group)))
+
+```
+
+With only a couple of lines of code we go from `raw_data` to real insights in your data. For example, 
+
+-   The three experiments seem to have similar distirbutions between groups, but the third experiment `V01744....` looks a bit different than the first two
+-   From the plot, it can be seen that in the group with highest cell density `300.000` the O2 levels are still in a range that the wells do not become hypoxic. The lowest O2 levels are at around 100 mmHg.
+-   For the `50.000` group in the first two experiments there seems to be some signal in the right tail of the distribution which is not obviously in the third experiment `50.000` group or in the other groups.
+
+Let's explore this right tail of the `50.000` group in more detail.
+
+``` {webr-r}
+
+library(ggridges)
+
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") %>%
+  ggplot(aes(x = O2_mmHg, y = plate_id,
+  fill = ifelse(after_stat( x > 154), 
+            "above 154", "below 154")))+
+  stat_density_ridges(geom = "density_ridges_gradient", 
+      quantile_lines = TRUE, 
+      quantiles = 2) +
+  theme_ridges() +
+  scale_fill_manual(values = c("red", "gray70"), 
+                    name = NULL)
+
+```
+
+So what are these high O2_mmHg values. We can find out by looking at the data for the individuals wells. By filtering for the first plate we can see the O2_mmHg in more detail. By using a short unique string as input for the `str_detect` we only have to type a couple of characters, which saves us some time. Now we make a simple scatter plot.
+
+
+``` {webr-r}
+library(RColorBrewer)
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") %>%
+  filter(str_detect(plate_id,"V01947"))%>%
+  ggplot(aes(x = minutes, y = O2_mmHg,
+  color = well))+
+    geom_point()+
+    scale_color_manual(values =
+        colorRampPalette(
+          brewer.pal(4, "PuOr"))(14))+ 
+    theme_bw(base_size= 18)+
+    labs(y = "O2 (mmHg)",
+         x = "time (minutes)")
+
+
+```
+
+Indeed, there are two wells that have high `O2_mmHg`. Because of the many colors it is difficult to see which wells they are. Now do some ggplot trickery to label the two wells with higher O2.
+
+``` {webr-r}
+  
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") %>%
+  filter(str_detect(plate_id,"V01947"))%>%
+  ggplot(aes(x = minutes, y = O2_mmHg,
+  color = well))+
+    geom_point()+
+    geom_text(data = . %>%
+                filter(minutes == max(minutes)) %>%
+                filter(O2_mmHg >153),
+                aes(label = well),
+                vjust = 2.4,
+                show.legend = FALSE)+
+    scale_color_manual(values =
+        colorRampPalette(
+          brewer.pal(4, "PuOr"))(14))+ 
+    theme_bw(base_size= 18)+
+    labs(y = "O2 (mmHg)",
+         x = "time (minutes)")
+
+```
+::: callout-tip
+#### Exercise 1
+
+Make the same scatter plot for the other two plates for the `50.000` group, and observe if there are wells with abnormally high O2.
+
+``` {webr-r}
+
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") #%>%
+
+
+
+```
+:::
+
+::: {.callout-caution collapse="true"}
+#### Solution to Exercise 1
+
+``` {webr-r}
+
+#solution for experiment 2
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") %>%
+  filter(str_detect(plate_id,"V01941")) %>% #change 7 to 1
+  ggplot(aes(x = minutes, y = O2_mmHg,
+  color = well))+
+    geom_point()+
+    geom_text(data = . %>%
+                filter(minutes == max(minutes)) %>%
+                filter(O2_mmHg >153),
+                aes(label = well),
+                vjust = 2.4)+
+    scale_color_manual(values =
+        colorRampPalette(
+          brewer.pal(4, "PuOr"))(14))+ 
+    theme_bw(base_size= 18)+
+    labs(y = "O2 (mmHg)",
+         x = "time (minutes)")
+
+# wells C02 and F01 are high
+
+```
+
+
+``` {webr-r}
+
+#solution for experiment 3
+xf_3 %>% 
+  select(plate_id, raw_data) %>% 
+  unnest(c(raw_data)) %>% 
+  filter(group == "50.000") %>%
+  filter(str_detect(plate_id,"V01744")) %>% #change to 1744
+  ggplot(aes(x = minutes, y = O2_mmHg,
+  color = well))+
+    geom_point()+
+    scale_color_manual(values =
+        colorRampPalette(
+          brewer.pal(4, "PuOr"))(14))+ 
+    theme_bw(base_size= 18)+
+    labs(y = "O2 (mmHg)",
+         x = "time (minutes)")
+
+#O2 mmHg is similar in all wells (no high O2 outlier) 
+
+```
+
+:::
+

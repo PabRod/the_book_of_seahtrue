@@ -1,0 +1,5 @@
+---
+title: "Diving deeper"
+---
+
+In the previous chapters we learned R and got familiar with the `seahtrue` package and its output. Here we will explore what is possible with the seahtrue data in R. We will go through making some nice visualisations of the raw data and rate data. Also we will show how to combine multiple experiments into one tibble and visualize the data.

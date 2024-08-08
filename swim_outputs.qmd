@@ -1,0 +1,248 @@
+---
+title: "Seahtrue outputs"
+webr:
+  packages: ['tidyverse']
+editor: 
+  mode: source  
+
+---
+
+## Nested tibbles
+
+The data output format of the `run_seahtrue` function is a list of lists. List of lists is also called nesting of data. The advantage of this is that the data is properly organized, but also easily accessible. Here is an example that I took from a `tidyr` vignette <https://tidyr.tidyverse.org/articles/nest.html>.
+
+``` {webr-r}
+
+library(tidyverse)
+
+mtcars %>% 
+  nest(.by = cyl)
+
+
+```
+
+You can see that the the data is now nicely organized by the `cylinder` parameter. Since there are only 3 different values for the cyl in the mtcars dataset, there are now three rows and two columns, one column has the `cyl` parameter all other data is nested into a `data` column. 
+
+::: {.callout-note collapse="true"}
+## .by vs group_by
+
+In one of the latest releases of the `tidyverse` the use of `.by` was introduced. Previously we used the `group_by` to tell R how to organize the data. The grouping of data remains attached to the data tibble, which sometimes could result in unintentional things to happen, when you forgot that the tibble was grouped. The `group_by` can be undone with the `ungroup` command. 
+
+With the `.by` the grouping is only apparent while using the function in which you use it as argument. `group_by` and `.by` are doing similar things so they can be used both.Let's have a look at how they work:
+
+``` {webr-r}
+
+#first do a complete summarize
+mtcars %>%
+  summarize(meamn = mean(disp))
+
+
+#second only summarize the disp for each cyl
+mtcars %>% 
+  summarize(mean = mean(disp), .by = cyl)
+
+#alternatively you can use
+mtcars %>% 
+  group_by(cyl)%>%
+  summarize(mean = mean(disp))
+
+```
+
+
+If you `glimpse` the results of the two ways of using grouping above you will see that `group_by` is doing stuff to your data, that you might not want. In this case it turns the `mtcars` dataframe into a tibble, whereas the result of the `.by` in the `summarize` function is still a dataframe. Although it might not really matter whether your data is a tibble or dataframe, it shows that `group_by` is a bit more invasive on your data.
+
+:::
+
+You can use `pluck` to get to the nested `data`. Basically you just pluck a part of the data out of the full dataset.
+
+``` {webr-r}
+
+mtcars %>%
+  nest(.by = cyl) %>%
+  pluck("data", 1)
+
+```
+
+Please note that we use here `"data"` instead of `data`. It can be confusing when to use the `""` or not. For example, with the `pull` function which takes one full column out of a tibble, you are not using `""`.
+
+Also, `pluck` uses indexing for retrieving its components, it is not possible to directly get the element that belongs to `cyl == 3` for example. You would need to `filter` first on that parameter and then `pluck` the first row of data.
+
+## The purrr map function
+
+The cool thing about a nested tibble is that you can quickly perform stuff on each nested tibble. A really good introduction to  this is described in this blog post by Rebecca Barter <https://www.rebeccabarter.com/blog/2019-08-19_purrr>. You can map a function on each item from that row.
+
+``` {webr-r}
+
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = 
+           map(data, function(df) lm(mpg ~ wt, data = df)))
+
+  
+```
+
+You see that a new column is generated named `model`, if you `pluck` the one of the models, you can see the typical output of the linear model (`lm`) function. For each cylinder now you creates a linear model!
+
+``` {webr-r}
+
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = 
+           map(data, 
+               function(df) lm(mpg ~ wt, data = df))) %>%
+  pluck("model", 1)
+
+  
+```
+
+The semantics and how to use the `map` function is nicely explained in the blog post that was referenced here above. But some more considerations here:
+
+``` {webr-r}
+
+#this is the original form
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = 
+           map(data, function(df) lm(mpg ~ wt, data = df)))
+
+#some of the parts are left out
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = 
+           map(.x = data, 
+               .f = function(df) lm(mpg ~ wt, data = df)))
+
+#this makes it a bit more clear
+#now .x is the data and .f is the function
+
+#also you can change the function syntax
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = map(.x = data, 
+                     .f = ~ lm(mpg ~ wt, data = .x)))
+
+#now function was replaced with ~
+#and the df was replaced with .x
+
+#this also works . instead of .x
+mtcars %>% 
+  nest(.by = cyl) %>%
+  mutate(model = map(.x = data, 
+                     .f = ~ lm(mpg ~ wt, data = .)))
+
+```
+
+Another good resource for the purrr map function is <https://dcl-prog.stanford.edu/purrr-basics.html>. `map` has many more forms and ways to use, which are summarized in its cheat sheet <https://github.com/rstudio/cheatsheets/blob/main/purrr.pdf>.
+
+## The seahtrue ouput
+
+Now go and have a look at the `run_seahtrue` output.
+
+``` {webr-r}
+
+library(tidyverse)
+
+root_srcfile <- 
+  "https://raw.githubusercontent.com/vcjdeboer/"
+repository_srcfile <-
+  "seahtrue/develop-gerwin/data/"
+
+download.file(
+  paste0(
+    root_srcfile,
+    repository_srcfile,
+    "seahtrue_output_donor_A.rda"), 
+  "seahtrue_output_donor_A.rda")
+
+load("seahtrue_output_donor_A.rda")
+
+seahtrue_output_donor_A %>% glimpse()
+
+
+```
+
+Also pluck some of the data
+
+``` {webr-r}
+
+# get the original input filename and location
+seahtrue_output_donor_A %>% 
+  pluck("filepath_seahorse",1)
+
+# get the injection info
+seahtrue_output_donor_A %>% 
+  pluck("injection_info",1)
+
+# get the date when exp was run
+seahtrue_output_donor_A %>% 
+  pluck("date",1)
+
+
+```
+
+Some data are simple character strings, like the `date` column, whereas others are large tables like the `raw_data` column
+
+With this loaded data (`seahtrue_output_donor_A`) you can now do similar plotting as in the `plotting seahorse` chapter. For this we only have to `pluck` the `rate_data` out of the data set. Be carefull that we preprocessed the data and we have other column names now so first `glimpse` the data.
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>%
+  glimpse()
+
+#or get only the column names
+seahtrue_output_donor_A %>% 
+  colnames()
+
+
+```
+
+You will see that the column names are labeled with `wave`, in this way we can distinguish for example the time column in the `raw_data` tibble from the `time_wave` column in the `rate_data` tibble. Also, please notice that we have `OCR_wave_bc` and `OCR_wave`. This distinctino is made because we can have OCR data that is background corrected or not. When clicking on the background slider in the Wave software from Agilent, the OCR data will be changed to non background corrected. If at this point the data is exported the xlsx input file is not background corrected. In the `seahtrue` this will show up as `OCR_wave`. Typically however the data is background corrected, so we most of the time have `OCR_wave_bc`. 
+
+::: {.callout-note collapse="true"}
+## time and time again
+
+Since rate is an aggregate of mulitple O2 or pH readings, also the definition of the timing of each measurement is different between the `rate_data` and the `raw_data`. Therefore in the `seahtrue` package both times are labeled differently. For the `rate_table` we labeled it with `time_wave` and for the `raw_data` we labeled it with `timescale`. And again, we used `timescale` to distinguish it from the `time` in the original input file.
+
+:::
+
+Please note if we want to plot the OCR vs time, we have to use the `OCR_wave_bc` vs `time_wave` in our ggplot aesthetics. 
+
+It is good practice to have a quick look at how the groups were named in the experiment. We can use the `pull(group)` and `unique()` commands for this:
+
+``` {webr-r}
+
+#first have a look at what groups we have
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>%
+  pull(group) %>% unique()
+
+```
+
+Next, take some of the groups and plot them in a ggplot:
+
+``` {webr-r}
+
+seahtrue_output_donor_A %>% 
+  pluck("rate_data",1) %>%
+  filter(group %in% c("200.000", "Background")) %>% 
+  ggplot(aes(x = time_wave, y = OCR_wave_bc,
+             group = well, 
+             color = group))+
+    geom_point()+
+    geom_line() +
+    scale_color_brewer(palette = "Set1")+
+    labs(subtitle = "200.000 cells per well vs Background",
+         x = "time (minutes)",
+         y = "OCR (pmol/min)")+
+    theme_bw(base_size = 16)
+
+
+```
+
+Great, this looks exactly the same as the plot we generated using the data from the downloaded excel file in the "plotting seahorse" chapter.
+
+
+
+
+
