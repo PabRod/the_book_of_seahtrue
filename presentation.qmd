@@ -1,0 +1,167 @@
+---
+title: "The book of seahtrue"
+author: "Vincent de Boer"
+date: "24-nov-2023"
+format: 
+  revealjs:
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    footer: "Seahtrue workshop"
+
+---
+## The past..... 
+
+::: {.fragment .fade-up}
+
+![](presentation_images/excel.png){width=90%}
+
+
+:::
+
+## The past..... 
+
+::: {.fragment .fade-up}
+
+
+![](presentation_images/prism){}
+
+:::
+
+## The past..... 
+
+::: {.fragment .fade-up}
+
+
+![](presentation_images/bruno){}
+
+:::
+
+## The now and the future.....
+
+::: {.fragment .fade-up}
+
+![](presentation_images/tidyverse.png){}
+
+:::
+
+## The now and the future.....
+
+
+![](presentation_images/webr){height=80%}
+
+
+[webr](https://docs.r-wasm.org/webr/latest/){preview-link="true"}
+
+[seahtrue](https://splendorous-otter-0d20bc.netlify.app/jump_seahorse){preview-link="true"}
+
+
+## The obstacles of R
+
+[obstacles](https://education.rstudio.com/learn/beginner/){preview-link="true"}
+
+- installation of software
+- accessibility of your input/output files
+- coding skills
+- a shitload of information
+
+## The beauty of webr
+
+- *NO INSTALLATION NEEDED*
+- *EASY FILE HANDLING*
+- *INCREDIBLY REPRODUCIBLE*
+
+![](presentation_images/webr){width=10%, valign=0}
+
+## Learning a new skill
+
+
+``` r
+
+ 1 + 1 = 2
+ 
+```
+\
+``` r
+
+my_text <- "This is my text"
+
+
+```
+\
+
+``` r
+my_linear_function <- function(a, b, x ){
+  y = a*x + b
+}
+
+```
+
+
+## What will you learn?
+
+::: {.incremental}
+
+- Tidy coding
+- Tidy plotting
+- Functions
+- Purrr
+- Easy seahorse analysis
+- Advanced seahorse analysis
+
+:::
+
+
+
+
+## Advanced Seahtrue 1
+![](presentation_images/biospace.png){}
+
+
+## Advanced Seahtrue 2
+![](presentation_images/gauge.png){}
+
+## What is Seahtrue?
+
+> *It puts all your Seahorse data into an easy accessible format*
+
+- Reproducibility
+- Advanced data analysis
+- Multi plate comparison
+- Integration of normalisation
+
+
+
+## What is Seahtrue
+
+> *It puts all your Seahorse data into an easy accessible format*
+
+![](presentation_images/bruno){}
+
+
+## What is Seahtrue NOT?
+
+- images analysis (-> imageflower) 
+- no plotting function in package (only in the book)
+- it touches upon QC, but is not fully implemented
+
+## Why is tidyverse so good?
+
+![](presentation_images/dplyr.png){}
+
+[click me](https://dplyr.tidyverse.org/){preview-link="true"}
+
+
+## Why is tidyverse so good?
+
+![](presentation_images/tidyr.png){}
+
+[tidyr](https://tidyr.tidyverse.org/articles/tidy-data.html){preview-link="true"}
+/
+[tidy data](https://r4ds.had.co.nz/tidy-data.html){preview-link="true"}
+
+## What to do today?
+
+[seahtrue](https://splendorous-otter-0d20bc.netlify.app/jump_seahorse){preview-link="true"}
+
