@@ -1,6 +1,8 @@
 # Preface {.unnumbered}
 
-This is the R Seahorse data analysis manual using functions from the Seahtrue package. Its purpose is to demonstrate and educate how to use R for Extracellular Flux analysis. A dedicated data analysis pipeline is used that allows for quality control and advanced plotting of the data.
+This is the R Seahorse data analysis manual using functions from the Seahtrue package.
+Its purpose is to demonstrate and educate how to use R for Extracellular Flux analysis.
+We use a dedicated data analysis pipeline for quality control and advanced plotting of the data.
 
 The manual is designed using a webr/wasm format, so that you can run R in your browser and do not need to install any R or Rstudio software on your computer.
 
