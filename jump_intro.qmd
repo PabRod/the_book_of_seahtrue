@@ -8,8 +8,10 @@ These point-and-click tools are convenient to use and their main asset is that y
 For plotting data, you can choose formatting options by clicking on the features you want to change, again on a canvas that is in front of you on the screen. T
 1his canvas style of working is likely what is closest to our natural way of getting things done; putting stuff together with your hands and seeing directly what happens to the stuff is quick and actionable.
 
-The disadvantages of using point-and-click tools in biological and medical sciences are that point-and-click tools are not traceable and can be prone to mistakes.
-The sequence of clicks and manipulations that have been made to the data was not recorded, which makes the data wrangling process not traceable and proper version control does not exist.
+The disadvantages of using point-and-click tools are that they are not traceable and can be prone to mistakes.
+The sequence of clicks and manipulations the data went through doesn't get recorded, which makes the process not reproducible for others and, most importantly, for you.
+Did you ever felt frustrated for having to manually generate and copy-paste a collection of figures?
+Then you are already familiar with these disadvantages.
 Also, you will always work within the limits of the tools that you are using, or how Bruno Rodrigues, the author of the free book [Building reproducible analytical pipelines with R](https://raps-with-r.dev/), phrased it "... point and click never allow you to go beyond what vendors think you need." [X-link](https://x.com/brodriguesco/status/1703325625384096025?s=20).
 
 Enter R!
