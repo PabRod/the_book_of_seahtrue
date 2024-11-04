@@ -4,10 +4,10 @@ This is the R Seahorse data analysis manual using functions from the Seahtrue pa
 Its purpose is to demonstrate and educate how to use R for Extracellular Flux analysis.
 We use a dedicated data analysis pipeline for quality control and advanced plotting of the data.
 
-The manual is designed using a webr/wasm format, so that you can run R in your browser and do not need to install any R or Rstudio software on your computer.
+You can run R this manual in your browser and do not need to install any R or Rstudio software on your computer.
 
 ::: callout-note
-The manual is targeted to all levels of learning, meaning that also interested learners without any R background or programming knowledge can use this manual
+The manual is targeted to all levels of learning, meaning that also interested learners without any R background or programming knowledge can use it
 :::
 
 ::: callout-tip
@@ -32,7 +32,7 @@ All other Agilent Seahorse info:
 
 [Telling Stories with data]{.underline}
 
-*Excellent very complete overview covering basic R coding, communicating science, and statistics* Good chapters for example:
+*Excellent very complete overview covering basic R coding, communicating science, and statistics*. These two chapters are particularly good:
 
 -   Clean and prepare <https://tellingstorieswithdata.com/09-clean_and_prepare.html>
 
@@ -42,7 +42,7 @@ All other Agilent Seahorse info:
 
 *The go-to book when you want to get familiar with R and tidy from Hadley Wickham and others from Posit* <https://r4ds.hadley.nz/>
 
-Nice ones for example:
+Nice sections, for example:
 
 -   ggplot basics <https://r4ds.hadley.nz/data-visualize>
 
