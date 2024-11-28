@@ -8,17 +8,21 @@ editor:
 
 ## The essentials
 
-Before you jumop into the water it can be of benefit when you know more about the water. What is the temperature? Is it really cold or just nice and warm? How high is the jump? Do you need to jump first 5 meters from a diving board or can you allready feel the water with your toes. This first chapter will give some basic programming essentials that will allow you to jump easier. Also it can be used as a reference for when you need to make the jump again 
+Before you jump into the water it can be of benefit when you know more about the water. What is the temperature? Is it really cold or just nice and warm? How high is the jump? Do you need to jump first 5 meters from a diving board or can you already feel the water with your toes?
+
+This first chapter will give some basic programming essentials that will allow you to jump easier. Also it can be used as a reference for when you need to make the jump again 
 
 ### Find your info online and in documentation
 
-R has so many functions that it is impossible to know everything by heart. So documentation of functions and the internet are always your best friend. 
+R has so many functions that it is impossible to know everything by heart. Documentation and the internet are always your best friend. 
 
-`Stackexhange` is an excellent resource. Almost 90 to 99% of your questions related to how you should use your R and tidy functions has been asked before by others. THe nice thing is that the active coding community put those questions with reproducible code in Stackexchange. More importantly, almost all questions has been accurately answered in multiple ways. 
+`Stackexhange` is an excellent resource. 90 to 99% of your questions related to how you should use your R and tidy functions has been asked before by others. The nice thing is that, most often, the questions include a snippet of code that makes the problem reproducible. More importantly, almost all questions have been accurately answered in multiple ways. 
 
-Other resources that come up more often in my search results are either forums on `POSIT community`, `Reddit`, or `Github discussions or issues` can also be usefull, but these are more forum-like comments, with not such a good solvability structure as stackexchange.
+Other resources that often come up in my search results are either forums on `POSIT community`, `Reddit`, or `Github discussions or issues`. These are more forum-like comments, with not such a good solvability structure as stackexchange.
 
 Then there are many more resources that somehow scrape the internet and collect basic info. Most of the time the info is correct but too simplistic. Not real issues are tackled. These are sites like `geeksforgeeks`, `datanovia`, `towardsdatascience`, some have better info then others, but most of the time these have commercial activities and in the end want to sell you courses or get your clicks.
+
+The good news is that **you don't have to remember any of these sites by heart. Just type your question on your favorite search engine**, ideally copypasting the exact error message, and your answer would very likely be found.
 
 ### R and tidyverse documentation
 
@@ -75,12 +79,11 @@ iris %>%
     geom_point()+
     geom_line() +
     theme_bw(base_size = 16)
-
 ```
 
 ### Calling packages and functions
 
-There are two ways of calling functions in R, the most straightforward and easy is when you run a function from base R you can just call the function with its name. When you want a function from another package, you can either first load the package with `library(your_favorite_package)` and then call your function with `my_favorite_function(my_argument)`, but another way that is also preferred is to always also mention the package from which the function comes from. Sometimes packages use the same function name, but then they are actually are different. In that case, you need to be carefull with the `library` loading, because then the function might be masked by another function with the same name from another package.
+There are two ways of calling functions in R, the most straightforward and easy one is just to call it with its name. This works only when you run a function from base R. When you want a function from another package, you can either first load the package with `library(your_favorite_package)` and then call your function with `my_favorite_function(my_argument)`. Another, preferred way, is to always explicitly mention the package from which the function comes from. It can happen that two different packages implement a function with the same name, leading to confusion. In that case, you need to be careful with the `library` loading, because then the function might be masked by another function with the same name from another package
 
 ``` {webr-r}
 
@@ -127,7 +130,7 @@ x = 1
 
 ### Vectors and lists
 
-A `vector` in R is a collectino of items (elements) of the same kind (types). A `list` is a collection of items to can also have different types. We make a vector with `c()` and a list with `list`. The `c` in `c()` apparently stands for `combine` [link](https://stackoverflow.com/questions/11488820/why-use-c-to-define-vector)
+A `vector` in R is a collection of items (elements) of the same kind (types). A `list` is a collection of items that can also have different types. We make a vector with `c()` and a list with `list`. The `c` in `c()` apparently stands for `combine` [link](https://stackoverflow.com/questions/11488820/why-use-c-to-define-vector)
 
 ``` {webr-r}
 
@@ -151,7 +154,7 @@ y
   
 ```
 
-Also, R forces that a vector is of one type. You can see that when you specifiy a vector with numbers and characters eg. `c(1, 2, "1", "2)`. It forces the vector to be of `character` type.
+If you try to build a vector with elements of different types, R will try to adapt all of them to a single type. You can see that when you specify a vector with numbers and characters eg. `c(1, 2, "1", "2)`. It forces the vector to be of `character` type. While it may look handy that R does this for us, it is a dangerous feature that might lead to wrong inputs going unnoticed.
 
 ``` {webr-r}
 
