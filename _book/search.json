@@ -154,22 +154,33 @@
     "objectID": "jump_summary.html#what-did-we-learn",
     "href": "jump_summary.html#what-did-we-learn",
     "title": "5  Summary",
-    "section": "5.1 What did we learn?",
-    "text": "5.1 What did we learn?\n\n5.1.1 Ditching\n\nThe benefits of using R over point-and-click software for data analysis in biological and biomedical sciences are that it is open-source, it has a wide and diverse community with a huge number of resources, it is relatively easy to learn, and it offers workflows that is very well suited for doing reproducible and responsible data analysis.\nThe tidyverse offers advantages over base R. It offers an intuitive way of coding with functional names and tidy data handling and coding in mind\nR in the browser offers easy access to R without installing software\n\n\n\n5.1.2 Cars\n\nGeneral R coding and execution of code\nHow to look at data tables: head, tail, glimpse\nThe pipe operator %>% or |>\nMaking factorial data using as.factor\nthe dplyr function select\nbasic ggplot functions using aes aesthetics and geoms such as geom_point\nadding color and shape and using scale_brewer_manual and scale_shape\nimproving layout; theme_bw, base_size and labs\nusing chatGPT for coding improvements\n\n\n\n5.1.3 Seahorse\n\nLoading data and working with typical Seahorse data\nUsing janitor clean_names\nUsing the dplyr function filter\nUsing the %in% operator\nChanging the layout of ggplots usine theme elements and arguments.\nadding text to ggplot using geom_text and annotate\nAdding lines to ggplot using geom_vline\nnesting pipes in ggplot function for subsetting data\nUsing facet_wrap to make multiple similar plots from one datatable\nUsing the forcats fct_reorder function\nChanging data formats to numbers using as.double\nUsing the dplyr summarize function\nUsing stat_summary to compute means or medians in ggplots\nUsing geom_smooth to make regression lines"
+    "section": "",
+    "text": "5.1.1 Ditching point-and-click\n\nThe benefits of using R over point-and-click software for data analysis in biological and biomedical sciences are that:\n\nit is open-source,\nit has a wide and diverse community with a huge number of resources\nit is relatively easy to learn, and\nit offers very well suited workflows for doing reproducible and responsible data analysis\n\nThe tidyverse offers advantages over base R. It offers an intuitive way of coding with functional names and tidy data handling and coding in mind\nR in the browser offers easy access to R without installing software\n\n\n\n5.1.2 Plotting mtcars\n\nGeneral R coding and execution of code\nHow to look at data tables: head, tail, glimpse\nThe pipe operator %&gt;% or |&gt;\nMaking factorial data using as.factor\nthe dplyr function select\nbasic ggplot functions using aes aesthetics and geoms such as geom_point\nadding color and shape and using scale_brewer_manual and scale_shape\nimproving layout; theme_bw, base_size and labs\nusing chatGPT for coding improvements\n\n\n\n5.1.3 Plotting Seahorse data\n\nLoading data and working with typical Seahorse data\nUsing janitor clean_names\nUsing the dplyr function filter\nUsing the %in% operator\nChanging the layout of ggplots usine theme elements and arguments.\nAdding text to ggplot using geom_text and annotate\nAdding lines to ggplot using geom_vline\nNesting pipes in ggplot function for subsetting data\nUsing facet_wrap to make multiple similar plots from one datatable\nUsing the forcats fct_reorder function\nChanging data formats to numbers using as.double\nUsing the dplyr summarize function\nUsing stat_summary to compute means or medians in ggplots\nUsing geom_smooth to make regression lines",
+    "crumbs": [
+      "Jump into the water",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
+    ]
   },
   {
     "objectID": "jump_summary.html#what-we-did-not-learn",
     "href": "jump_summary.html#what-we-did-not-learn",
     "title": "5  Summary",
     "section": "5.2 What we did not learn?",
-    "text": "5.2 What we did not learn?\n\nbase R functions and how to address data in base R, eg xf$OCR[xf$Group == \"Background] and xf$Well[10]\nother important tidyverse functions, like pivot_wider, pivot_longer,\nmore complicated functions like the map function from the purrr package\nother simple ggplot geoms, like geom_bar, geom_boxplot, geom_density\nhow to save images and plots for using them in other software"
+    "text": "5.2 What we did not learn?\n\nBase R functions and how to address data in base R, eg xf$OCR[xf$Group == \"Background] and xf$Well[10]\nOther important tidyverse functions, like pivot_wider, pivot_longer,\nMore complicated functions like the map function from the purrr package\nOther simple ggplot geoms, like geom_bar, geom_boxplot, geom_density\nHow to save images and plots for using them in other software",
+    "crumbs": [
+      "Jump into the water",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
+    ]
   },
   {
     "objectID": "swim.html",
     "href": "swim.html",
     "title": "Swim underwater",
     "section": "",
-    "text": "Now we will go for a bit more than just swimming in R code. We will go underwater and swim in shallow water to look at those seahorses. In this section we will introduce functions from the seahtrue package and explore the output of seahtrue functions."
+    "text": "Now we will go for a bit more than just swimming in R code. We will go underwater and swim in shallow water to look at those seahorses. In this section we will introduce functions from the seahtrue package and explore the output of seahtrue functions.",
+    "crumbs": [
+      "Swim underwater"
+    ]
   },
   {
     "objectID": "swim_functions.html#functions",
@@ -311,6 +322,39 @@
     "crumbs": [
       "Swim underwater",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Seahtrue functions</span>"
+    ]
+  },
+  {
+    "objectID": "jump_summary.html",
+    "href": "jump_summary.html",
+    "title": "5  Summary",
+    "section": "",
+    "text": "5.1 What did we learn?",
+    "crumbs": [
+      "Jump into the water",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "jump_summary.html#other-resources",
+    "href": "jump_summary.html#other-resources",
+    "title": "5  Summary",
+    "section": "5.3 Other resources",
+    "text": "5.3 Other resources\n\nTutorials\n\nR for reproducible scientific analysis is a great introductory material. It is free, easy to follow and quick to learn and apply. You can skip the very first section on RStudio if you want.\nThe starter guide for transitioning your Python projects to R can be very useful to get quickstarted in R if you are familiar with Python.\nR packaging shows you how to write your own R packages.\n\nLonger reads\n\nR for data science is a really good book about R, with a focus on tidyverse. It is available for free.\nAdvanced R is another pretty good book for those who want to go even deeper into the language. Also available for free.",
+    "crumbs": [
+      "Jump into the water",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "jump_summary.html#external-resources",
+    "href": "jump_summary.html#external-resources",
+    "title": "5  Summary",
+    "section": "5.3 External resources",
+    "text": "5.3 External resources\n\nTutorials\n\nR for reproducible scientific analysis is a great introductory material. It is free, easy to follow and quick to learn and apply. You can skip the very first section on RStudio if you want.\nThe starter guide for transitioning your Python projects to R can be very useful to get quickstarted in R if you are familiar with Python.\nR packaging shows you how to write your own R packages.\n\nLonger reads\n\nR for data science is a really good book about R, with a focus on tidyverse. It is available for free.\nAdvanced R is another pretty good book for those who want to go even deeper into the language. Also available for free.",
+    "crumbs": [
+      "Jump into the water",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Summary</span>"
     ]
   }
 ]

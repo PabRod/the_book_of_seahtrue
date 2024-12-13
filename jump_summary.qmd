@@ -4,50 +4,59 @@ title: "Summary"
 
 ## What did we learn?
 
-### Ditching
+### Ditching point-and-click
 
-- The benefits of using R over point-and-click software for data analysis in biological and biomedical sciences are that it is open-source, it has a wide and diverse community with a huge number of resources, it is relatively easy to learn, and it offers workflows that is very well suited for doing reproducible and responsible data analysis.
+- The benefits of using R over point-and-click software for data analysis in biological and biomedical sciences are that: 
+  - it is open-source,
+  - it has a wide and diverse community with a huge number of resources
+  - it is relatively easy to learn, and 
+  - it offers very well suited workflows for doing reproducible and responsible data analysis
 - The tidyverse offers advantages over base R. It offers an intuitive way of coding with functional names and tidy data handling and coding in mind
 - R in the browser offers easy access to R without installing software
 
-### Cars
+### Plotting `mtcars`
 
-- General R coding and execution of code
-- How to look at data tables: `head`, `tail`, `glimpse`
-- The pipe operator `%>%` or `|>`
-- Making factorial data using `as.factor`
-- the `dplyr` function `select` 
-- basic `ggplot` functions using `aes` aesthetics and geoms such as `geom_point`
-- adding `color` and `shape` and using `scale_brewer_manual` and `scale_shape`
-- improving layout; `theme_bw`, `base_size` and `labs`
-- using chatGPT for coding improvements
+-   General R coding and execution of code
+-   How to look at data tables: `head`, `tail`, `glimpse`
+-   The pipe operator `%>%` or `|>`
+-   Making factorial data using `as.factor`
+-   the `dplyr` function `select`
+-   basic `ggplot` functions using `aes` aesthetics and geoms such as `geom_point`
+-   adding `color` and `shape` and using `scale_brewer_manual` and `scale_shape`
+-   improving layout; `theme_bw`, `base_size` and `labs`
+-   using chatGPT for coding improvements
 
+### Plotting Seahorse data
 
-### Seahorse
-
-- Loading data and working with typical Seahorse data 
-- Using `janitor` `clean_names`
-- Using the `dplyr` function `filter`
-- Using the `%in%` operator
-- Changing the layout of ggplots usine `theme` elements and arguments.
-- adding text to ggplot using `geom_text` and `annotate`
-- Adding lines to ggplot using `geom_vline`
-- nesting pipes in ggplot function for subsetting data
-- Using `facet_wrap` to make multiple similar plots from one datatable
-- Using the `forcats` `fct_reorder` function
-- Changing data formats to numbers using `as.double`
-- Using the dplyr `summarize` function
-- Using `stat_summary` to compute means or medians in ggplots
-- Using `geom_smooth` to make regression lines
+-   Loading data and working with typical Seahorse data
+-   Using `janitor` `clean_names`
+-   Using the `dplyr` function `filter`
+-   Using the `%in%` operator
+-   Changing the layout of ggplots usine `theme` elements and arguments.
+-   Adding text to ggplot using `geom_text` and `annotate`
+-   Adding lines to ggplot using `geom_vline`
+-   Nesting pipes in ggplot function for subsetting data
+-   Using `facet_wrap` to make multiple similar plots from one datatable
+-   Using the `forcats` `fct_reorder` function
+-   Changing data formats to numbers using `as.double`
+-   Using the dplyr `summarize` function
+-   Using `stat_summary` to compute means or medians in ggplots
+-   Using `geom_smooth` to make regression lines
 
 ## What we did not learn?
 
-- base R functions and how to address data in base R, eg `xf$OCR[xf$Group == "Background]` and `xf$Well[10]`
-- other important tidyverse functions, like `pivot_wider`, `pivot_longer`, 
-- more complicated functions like the `map` function from the `purrr` package
-- other simple ggplot geoms, like `geom_bar`, `geom_boxplot`, `geom_density`
-- how to save images and plots for using them in other software
+-   Base R functions and how to address data in base R, eg `xf$OCR[xf$Group == "Background]` and `xf$Well[10]`
+-   Other important tidyverse functions, like `pivot_wider`, `pivot_longer`,
+-   More complicated functions like the `map` function from the `purrr` package
+-   Other simple ggplot geoms, like `geom_bar`, `geom_boxplot`, `geom_density`
+-   How to save images and plots for using them in other software
 
+## External resources
 
-
-
+- Tutorials
+  - [R for reproducible scientific analysis](https://swcarpentry.github.io/r-novice-gapminder/01-rstudio-intro.html#introduction-to-r) is a great introductory material. It is free, easy to follow and **quick to learn and apply**. You can skip the very first section on RStudio if you want.
+  - [The starter guide for transitioning your Python projects to R](https://towardsdatascience.com/the-starter-guide-for-transitioning-your-python-projects-to-r-8de4122b04ad) can be very useful to get quickstarted in R if you are familiar with Python.
+  - [R packaging](https://carpentries-incubator.github.io/lesson-R-packaging/) shows you how to write your own R packages.
+- Longer reads
+  - [R for data science](https://r4ds.had.co.nz/) is a really good book about R, with a focus on tidyverse. It is available for free.
+  - [Advanced R](https://adv-r.hadley.nz/) is another pretty good book for those who want to go even deeper into the language. Also available for free.
