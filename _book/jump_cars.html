@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The book of seahtrue - 3&nbsp; Plotting cars</title>
+<title>3&nbsp; Plotting cars – The book of seahtrue</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,7 +17,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -47,7 +47,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -56,8 +62,10 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs/editor/editor.main.css">
@@ -224,11 +232,16 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./jump.html">Jump into the water</a></li><li class="breadcrumb-item"><a href="./jump_cars.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -236,118 +249,134 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">The book of seahtrue</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/vcjdeboer" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/vcjdeboer" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./jump.html" class="sidebar-item-text sidebar-link">Jump into the water</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a href="./jump.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Jump into the water</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./jump_intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ditching point-and-click and diving into R</span></a>
+  <a href="./jump_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Ditching point-and-click and diving into R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./jump_essentials.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Jumping essentials</span></a>
+  <a href="./jump_essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Jumping essentials</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./jump_cars.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></a>
+  <a href="./jump_cars.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./jump_seahorse.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting seahorse</span></a>
+  <a href="./jump_seahorse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting seahorse</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./jump_summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./jump_summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./swim.html" class="sidebar-item-text sidebar-link">Swim underwater</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a href="./swim.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Swim underwater</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./swim_functions.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seahtrue functions</span></a>
+  <a href="./swim_functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seahtrue functions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./swim_outputs.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seahtrue outputs</span></a>
+  <a href="./swim_outputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seahtrue outputs</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./swim_summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./swim_summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./dive.html" class="sidebar-item-text sidebar-link">Diving deeper</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a href="./dive.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diving deeper</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dive_alone.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Single experiment</span></a>
+  <a href="./dive_alone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Single experiment</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dive_together.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multiple experiments</span></a>
+  <a href="./dive_together.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multiple experiments</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./surf.html" class="sidebar-item-text sidebar-link">Surfing the waves</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a href="./surf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Surfing the waves</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./surf_seahtrue.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Running seahtrue functions</span></a>
+  <a href="./surf_seahtrue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Running seahtrue functions</span></span></a>
   </div>
 </li>
       </ul>
@@ -355,39 +384,40 @@ ul.task-list li input[type="checkbox"] {
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learn-and-code" id="toc-learn-and-code" class="nav-link active" data-scroll-target="#learn-and-code"><span class="toc-section-number">3.1</span>  Learn and code</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="toc-section-number">3.2</span>  Exercises</a>
+  <li><a href="#learn-and-code" id="toc-learn-and-code" class="nav-link active" data-scroll-target="#learn-and-code"><span class="header-section-number">3.1</span> Learn and code</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.2</span> Exercises</a>
   <ul class="collapse">
-  <li><a href="#adding-layers-and-changing-the-mtcars-plot" id="toc-adding-layers-and-changing-the-mtcars-plot" class="nav-link" data-scroll-target="#adding-layers-and-changing-the-mtcars-plot"><span class="toc-section-number">3.2.1</span>  Adding layers and changing the MTCARS plot</a></li>
-  <li><a href="#fixing-common-errors" id="toc-fixing-common-errors" class="nav-link" data-scroll-target="#fixing-common-errors"><span class="toc-section-number">3.2.2</span>  Fixing common errors</a></li>
+  <li><a href="#adding-layers-and-changing-the-mtcars-plot" id="toc-adding-layers-and-changing-the-mtcars-plot" class="nav-link" data-scroll-target="#adding-layers-and-changing-the-mtcars-plot"><span class="header-section-number">3.2.1</span> Adding layers and changing the MTCARS plot</a></li>
+  <li><a href="#fixing-common-errors" id="toc-fixing-common-errors" class="nav-link" data-scroll-target="#fixing-common-errors"><span class="header-section-number">3.2.2</span> Fixing common errors</a></li>
   </ul></li>
-  <li><a href="#basic-r-semantics" id="toc-basic-r-semantics" class="nav-link" data-scroll-target="#basic-r-semantics"><span class="toc-section-number">3.3</span>  Basic R semantics</a>
+  <li><a href="#basic-r-semantics" id="toc-basic-r-semantics" class="nav-link" data-scroll-target="#basic-r-semantics"><span class="header-section-number">3.3</span> Basic R semantics</a>
   <ul class="collapse">
-  <li><a href="#assignment" id="toc-assignment" class="nav-link" data-scroll-target="#assignment"><span class="toc-section-number">3.3.1</span>  Assignment</a></li>
-  <li><a href="#vectors-and-lists" id="toc-vectors-and-lists" class="nav-link" data-scroll-target="#vectors-and-lists"><span class="toc-section-number">3.3.2</span>  Vectors and lists</a></li>
-  <li><a href="#common-semantics" id="toc-common-semantics" class="nav-link" data-scroll-target="#common-semantics"><span class="toc-section-number">3.3.3</span>  Common semantics</a></li>
-  <li><a href="#the-tilde" id="toc-the-tilde" class="nav-link" data-scroll-target="#the-tilde"><span class="toc-section-number">3.3.4</span>  ~ (the “tilde”)</a></li>
-  <li><a href="#the-plus" id="toc-the-plus" class="nav-link" data-scroll-target="#the-plus"><span class="toc-section-number">3.3.5</span>  + (the plus)</a></li>
-  <li><a href="#the-pipe" id="toc-the-pipe" class="nav-link" data-scroll-target="#the-pipe"><span class="toc-section-number">3.3.6</span>  %&gt;% (the pipe)</a></li>
-  <li><a href="#equal-to" id="toc-equal-to" class="nav-link" data-scroll-target="#equal-to"><span class="toc-section-number">3.3.7</span>  == (equal to)</a></li>
-  <li><a href="#aes-aesthetics-in-ggplot" id="toc-aes-aesthetics-in-ggplot" class="nav-link" data-scroll-target="#aes-aesthetics-in-ggplot"><span class="toc-section-number">3.3.8</span>  aes (aesthetics in ggplot)</a></li>
-  <li><a href="#in-match-operator" id="toc-in-match-operator" class="nav-link" data-scroll-target="#in-match-operator"><span class="toc-section-number">3.3.9</span>  %in% (match operator)</a></li>
+  <li><a href="#assignment" id="toc-assignment" class="nav-link" data-scroll-target="#assignment"><span class="header-section-number">3.3.1</span> Assignment</a></li>
+  <li><a href="#vectors-and-lists" id="toc-vectors-and-lists" class="nav-link" data-scroll-target="#vectors-and-lists"><span class="header-section-number">3.3.2</span> Vectors and lists</a></li>
+  <li><a href="#common-semantics" id="toc-common-semantics" class="nav-link" data-scroll-target="#common-semantics"><span class="header-section-number">3.3.3</span> Common semantics</a></li>
+  <li><a href="#the-tilde" id="toc-the-tilde" class="nav-link" data-scroll-target="#the-tilde"><span class="header-section-number">3.3.4</span> ~ (the “tilde”)</a></li>
+  <li><a href="#the-plus" id="toc-the-plus" class="nav-link" data-scroll-target="#the-plus"><span class="header-section-number">3.3.5</span> + (the plus)</a></li>
+  <li><a href="#the-pipe" id="toc-the-pipe" class="nav-link" data-scroll-target="#the-pipe"><span class="header-section-number">3.3.6</span> %&gt;% (the pipe)</a></li>
+  <li><a href="#equal-to" id="toc-equal-to" class="nav-link" data-scroll-target="#equal-to"><span class="header-section-number">3.3.7</span> == (equal to)</a></li>
+  <li><a href="#aes-aesthetics-in-ggplot" id="toc-aes-aesthetics-in-ggplot" class="nav-link" data-scroll-target="#aes-aesthetics-in-ggplot"><span class="header-section-number">3.3.8</span> aes (aesthetics in ggplot)</a></li>
+  <li><a href="#in-match-operator" id="toc-in-match-operator" class="nav-link" data-scroll-target="#in-match-operator"><span class="header-section-number">3.3.9</span> %in% (match operator)</a></li>
   </ul></li>
-  <li><a href="#practical-tips" id="toc-practical-tips" class="nav-link" data-scroll-target="#practical-tips"><span class="toc-section-number">4</span>  Practical tips</a>
+  <li><a href="#practical-tips" id="toc-practical-tips" class="nav-link" data-scroll-target="#practical-tips"><span class="header-section-number">4</span> Practical tips</a>
   <ul class="collapse">
-  <li><a href="#running-your-code" id="toc-running-your-code" class="nav-link" data-scroll-target="#running-your-code"><span class="toc-section-number">4.1</span>  Running your code</a></li>
-  <li><a href="#simple-troubleshooting-your-pipelines-and-ggplots" id="toc-simple-troubleshooting-your-pipelines-and-ggplots" class="nav-link" data-scroll-target="#simple-troubleshooting-your-pipelines-and-ggplots"><span class="toc-section-number">4.2</span>  Simple troubleshooting your pipelines and ggplots</a></li>
-  <li><a href="#building-your-data-visualisation-step-by-step" id="toc-building-your-data-visualisation-step-by-step" class="nav-link" data-scroll-target="#building-your-data-visualisation-step-by-step"><span class="toc-section-number">4.3</span>  Building your data visualisation step by step</a>
+  <li><a href="#running-your-code" id="toc-running-your-code" class="nav-link" data-scroll-target="#running-your-code"><span class="header-section-number">4.1</span> Running your code</a></li>
+  <li><a href="#simple-troubleshooting-your-pipelines-and-ggplots" id="toc-simple-troubleshooting-your-pipelines-and-ggplots" class="nav-link" data-scroll-target="#simple-troubleshooting-your-pipelines-and-ggplots"><span class="header-section-number">4.2</span> Simple troubleshooting your pipelines and ggplots</a></li>
+  <li><a href="#building-your-data-visualisation-step-by-step" id="toc-building-your-data-visualisation-step-by-step" class="nav-link" data-scroll-target="#building-your-data-visualisation-step-by-step"><span class="header-section-number">4.3</span> Building your data visualisation step by step</a>
   <ul class="collapse">
-  <li><a href="#find-your-info-online-and-in-documentation" id="toc-find-your-info-online-and-in-documentation" class="nav-link" data-scroll-target="#find-your-info-online-and-in-documentation"><span class="toc-section-number">4.3.1</span>  Find your info online and in documentation</a></li>
-  <li><a href="#r-and-tidyverse-documentation" id="toc-r-and-tidyverse-documentation" class="nav-link" data-scroll-target="#r-and-tidyverse-documentation"><span class="toc-section-number">4.3.2</span>  R and tidyverse documentation</a></li>
-  <li><a href="#style-and-layout" id="toc-style-and-layout" class="nav-link" data-scroll-target="#style-and-layout"><span class="toc-section-number">4.3.3</span>  Style and layout</a></li>
+  <li><a href="#find-your-info-online-and-in-documentation" id="toc-find-your-info-online-and-in-documentation" class="nav-link" data-scroll-target="#find-your-info-online-and-in-documentation"><span class="header-section-number">4.3.1</span> Find your info online and in documentation</a></li>
+  <li><a href="#r-and-tidyverse-documentation" id="toc-r-and-tidyverse-documentation" class="nav-link" data-scroll-target="#r-and-tidyverse-documentation"><span class="header-section-number">4.3.2</span> R and tidyverse documentation</a></li>
+  <li><a href="#style-and-layout" id="toc-style-and-layout" class="nav-link" data-scroll-target="#style-and-layout"><span class="header-section-number">4.3.3</span> Style and layout</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -406,9 +436,9 @@ ul.task-list li input[type="checkbox"] {
   });
 </script>
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./jump.html">Jump into the water</a></li><li class="breadcrumb-item"><a href="./jump_cars.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Plotting cars</span></h1>
 </div>
 
 
@@ -421,11 +451,13 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
+
 </header>
+
 
 <section id="learn-and-code" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="learn-and-code"><span class="header-section-number">3.1</span> Learn and code</h2>
-<p>First, let’s make a simple scatter plot. We use a famous dataset that is used in R a lot for educational puposes. This is the <code>mtcars</code> dataset (mtcars = “Motor Trend Car Road Tests”). See <a href="https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html">parameter overview</a> and <a href="https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars">documentation</a> for info about the <code>mtcars</code> dataset. We can always call this dataset when using R, it is one of many datasets available from base R or tidyverse packages.</p>
+<p>First, let’s make a simple scatter plot. We’ll use a famous dataset that is used in R a lot for educational purposes. This is the <code>mtcars</code> dataset. It stands for <em>“Motor Trend Car Road Tests”</em>. See <a href="https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html">parameter overview</a> and <a href="https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars">documentation</a> for info about the <code>mtcars</code> dataset. It is one of many datasets available from base R or tidyverse packages, so we can always call it without having to load it.</p>
 <p>First, we will inspect the dataset. For this we will load the tidyverse:</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-1">Loading
   webR...</button>
@@ -632,7 +664,7 @@ library(tidyverse)`,
     executeCode(editor.getValue());
   };
 </script>
-<p>Once tidyverse is loaded via the <code>library</code> call, it is loaded in your current session in your browser, so you do not have to load it each time. Next have a look at the full dataset.</p>
+<p>Once tidyverse is loaded via the <code>library</code> call, it is available in your current session in your browser, so you do not have to load it each time. Let’s have a look at the full dataset:</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-2">Loading
   webR...</button>
 <div id="webr-editor-2"></div>
@@ -1458,12 +1490,12 @@ mtcars %>% tail()`,
     executeCode(editor.getValue());
   };
 </script>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 The pipe %&gt;% operator
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -1890,7 +1922,7 @@ mtcars %>%
     executeCode(editor.getValue());
   };
 </script>
-<p>Next, make a simple plot with the miles per gallon (<code>mpg</code>) and dispension parameters (<code>disp</code>) in the <code>mtcars</code> dataset.</p>
+<p>Next, make a simple plot with the miles per gallon (<code>mpg</code>) and displacement parameters (<code>disp</code>) in the <code>mtcars</code> dataset.</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-8">Loading
   webR...</button>
 <div id="webr-editor-8"></div>
@@ -2125,10 +2157,11 @@ mtcars %>%
 mtcars %>% 
     #added cyl to the selection here
     select(mpg, disp, cyl) %>% 
-    ggplot(aes(x = mpg, y = disp,
-    #added color to the aesthetics here
-               color = cyl))+ 
-        geom_point(size = 4)
+    ggplot(aes(x = mpg, 
+               y = disp,
+               color = cyl) #added color to the aesthetics here
+               ) + 
+               geom_point(size = 4)
   `,
       language: 'r',
       theme: 'vs-light',
@@ -2314,7 +2347,7 @@ mtcars %>%
     executeCode(editor.getValue());
   };
 </script>
-<p>Here we need to have a look at data-types. The <code>cyl</code> parameters is a numerical parameter. GGplot automatically assumes we want a continous scale for this. Instead the <code>cyl</code> is more of a categorical data type there are either 4, 6 or 8 cylinders in each car so we can make the <code>cyl</code> parameter categorical like this:</p>
+<p>Here we need to have a look at data-types. The <code>cyl</code> parameter is numerical. <code>ggplot</code> automatically assumes we want a continuous scale for this. Instead the <code>cyl</code> is more of a categorical data type (there are either 4, 6 or 8 cylinders in each car) so we can explicitly make the <code>cyl</code> parameter categorical like this:</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-10">Loading
   webR...</button>
 <div id="webr-editor-10"></div>
@@ -2338,7 +2371,7 @@ mtcars %>%
 mtcars %>% 
     select(mpg, cyl, disp) %>%
     ggplot(aes(x = mpg, y = disp,
-               color = as.factor(cyl)))+
+               color = as.factor(cyl))) +
         geom_point(size = 4)
   `,
       language: 'r',
@@ -2525,7 +2558,7 @@ mtcars %>%
     executeCode(editor.getValue());
   };
 </script>
-<p>If you want to have different color you can use one of the many color pallettes that are available:</p>
+<p>If you want to have different colors you can use one of the many color palettes available:</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-11">Loading
   webR...</button>
 <div id="webr-editor-11"></div>
@@ -2765,7 +2798,7 @@ mtcars %>%
     ggplot(aes(x = mpg, y = disp,
                color = as.factor(cyl),
 #please note to also add shape to the aesthetics here
-                shape = as.factor(cyl)))+ 
+               shape = as.factor(cyl))) + 
         geom_point(size = 4)+
         scale_color_brewer(name = "cylinders",
                             palette = "Set2")+
@@ -2956,7 +2989,7 @@ mtcars %>%
     executeCode(editor.getValue());
   };
 </script>
-<p>GGplot can use different themes for your plots and there are many many options to tweak your plots to the way you like</p>
+<p><code>ggplot</code> can use different themes for your plots, and there are many many options to tweak your plots to the way you like. You can see some examples below:</p>
 <p>Let’s change titles:</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-13">Loading
   webR...</button>
@@ -3842,18 +3875,18 @@ mtcars %>%
     executeCode(editor.getValue());
   };
 </script>
-<p>Now we have generated a nice visualisation of our data using <code>ggplot</code>. Please note that <code>ggplot</code> uses layers and we added each time a different layer of information to the ggplot. If you want you can go wild with ggplot. Please find a nice <a href="https://www.cedricscherer.com/2019/12/30/best-tidytuesday-2019/">overview</a> of visualisations using ggplot, tidy and R from Cedric Scherer. Also the underlying R code is available for those plots.</p>
+<p>Now we have generated a nice visualisation of our data using <code>ggplot</code>. Please note that <code>ggplot</code> uses layers and we added each time a different layer of information to the ggplot. If you want you can go wild with <code>ggplot.</code> Please find a nice <a href="https://www.cedricscherer.com/2019/12/30/best-tidytuesday-2019/">overview</a> of visualisations using ggplot, tidy and R from Cedric Scherer. Also the underlying R code is available for those plots.</p>
 </section>
 <section id="exercises" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.2</span> Exercises</h2>
 <section id="adding-layers-and-changing-the-mtcars-plot" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="adding-layers-and-changing-the-mtcars-plot"><span class="header-section-number">3.2.1</span> Adding layers and changing the MTCARS plot</h3>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Exercise 1
 </div>
 </div>
@@ -4088,12 +4121,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Exercise 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -4330,12 +4363,12 @@ Solution to Exercise 1
 </div>
 </div>
 </div>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Exercise 2
 </div>
 </div>
@@ -4564,19 +4597,19 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Exercise 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Please make sure that the ggplot is not separates into groups, if the data is grouped by <code>color</code> or <code>shape</code> the regression line for each group will be generated.</p>
+<p>Please make sure that the ggplot is not separated into groups. If the data is grouped by <code>color</code> or <code>shape</code> a different regression line for each group will be generated.</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-20">Loading
   webR...</button>
 <div id="webr-editor-20"></div>
@@ -4802,12 +4835,12 @@ Solution to Exercise 2
 </div>
 </div>
 </div>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Exercise 3
 </div>
 </div>
@@ -5037,12 +5070,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Exercise 3
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -5275,12 +5308,12 @@ Solution to Exercise 3
 <section id="fixing-common-errors" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="fixing-common-errors"><span class="header-section-number">3.2.2</span> Fixing common errors</h3>
 <p>Below is some code that is not working properly, because of coding semantics mistakes. Can you spot (and fix) the errors?</p>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Fix error 1
 </div>
 </div>
@@ -5496,12 +5529,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Error 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -5720,12 +5753,12 @@ Solution to Error 1
 </div>
 </div>
 </div>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Fix error 2
 </div>
 </div>
@@ -5941,12 +5974,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Error 2
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -6161,16 +6194,16 @@ Solution to Error 2
     executeCode(editor.getValue());
   };
 </script>
-<p>Ggplot layers are added with a <code>+</code> not with the <code>pipe</code> term.</p>
+<p><code>ggplot</code> layers are added with a <code>+</code> not with the <code>pipe</code> term.</p>
 </div>
 </div>
 </div>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Fix error 3
 </div>
 </div>
@@ -6386,12 +6419,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Error 3
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -6610,17 +6643,17 @@ Solution to Error 3
 </div>
 </div>
 </div>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Fix error 4
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This is an error that is not apparent from an error message that R generates for you. However, the code does not give you what you want. The plot should show the <code>cyl</code> parameter in different shapes, just like there are three different colors for each level of the <code>cyl</code> parameter.</p>
+<p>Although R doesn’t show you an error message, the code does not give you what you want. The plot should show the <code>cyl</code> parameter in different shapes, just like there are three different colors for each level of the <code>cyl</code> parameter.</p>
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-29">Loading
   webR...</button>
 <div id="webr-editor-29"></div>
@@ -6837,12 +6870,12 @@ mtcars %>%
 </script>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Error 4
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -7066,12 +7099,12 @@ Solution to Error 4
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Error 4 using chatGPT
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -7294,7 +7327,7 @@ Solution to Error 4 using chatGPT
     executeCode(editor.getValue());
   };
 </script>
-<p>chatGPT indeed put the <code>shape</code> in the <code>aes</code>, but also started making other changed. The remark that chatGPT made was: <em>“you should correct the syntax error and use scale_shape_manual() instead of scale_shape().”</em>… <em>“to customize the shape values and labels.”</em>. I didn’t really ask for that, and from there it went all downhill. Let’s call that the “chatGPT loop of death”. Let’s see what happened.</p>
+<p>chatGPT indeed put the <code>shape</code> in the <code>aes</code>, but also started making other changes. The remark that chatGPT made was: <em>“you should correct the syntax error and use scale_shape_manual() instead of scale_shape().”</em>… <em>“to customize the shape values and labels.”</em>. I didn’t really ask for that, and from there it went all downhill. Let’s call that the “chatGPT loop of death”. Let’s see what happened.</p>
 <p>Running the “improved” code showed that there was still no <code>fill</code>, so it did not improve in a way that I wanted.</p>
 <p>Next I said <em>“but now the shapes don’t have a fill”</em> and chatGPT replied:</p>
 <p><em>“I see your concern. If you want to have both color and fill for the shapes, you can achieve this by mapping fill within the aes() call and using scale_fill_brewer() for the fill scale. Here’s the modified code to achieve that:”</em></p>
@@ -11698,7 +11731,7 @@ iris %>%
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="book_images/runcode.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Screenshot of a code block that is ready to run</figcaption><p></p>
+<figcaption>Screenshot of a code block that is ready to run</figcaption>
 </figure>
 </div>
 <p>Another option is to select a line of code (or more lines) and press <code>command or ctrl enter</code>. This will execute only the line or lines that you have selected.</p>
@@ -11921,12 +11954,12 @@ glimpse(USArrests)
     executeCode(editor.getValue());
   };
 </script>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Exercise x
 </div>
 </div>
@@ -12144,12 +12177,12 @@ USArrests #%>%
     executeCode(editor.getValue());
   };
 </script>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 HINTS
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -12176,12 +12209,12 @@ HINTS
 </div>
 </div>
 </div>
-<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution to Exercise x
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -12892,12 +12925,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
     }
-  });
-  clipboard.on('success', function(e) {
+    return false;
+  }
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -12929,11 +12965,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -12943,8 +13025,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -12956,9 +13047,245 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -12996,37 +13323,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
-    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          // default icon
-          link.classList.add("external");
-      }
-    }
 });
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./jump_essentials.html" class="pagination-link">
+      <a href="./jump_essentials.html" class="pagination-link" aria-label="Jumping essentials">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Jumping essentials</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./jump_seahorse.html" class="pagination-link">
+      <a href="./jump_seahorse.html" class="pagination-link" aria-label="Plotting seahorse">
         <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Plotting seahorse</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

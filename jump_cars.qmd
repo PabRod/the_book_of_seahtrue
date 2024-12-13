@@ -8,7 +8,7 @@ editor:
 
 ## Learn and code
 
-First, let's make a simple scatter plot. We use a famous dataset that is used in R a lot for educational puposes. This is the `mtcars` dataset (mtcars = "Motor Trend Car Road Tests"). See [parameter overview](https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html) and [documentation](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars) for info about the `mtcars` dataset. We can always call this dataset when using R, it is one of many datasets available from base R or tidyverse packages.
+First, let's make a simple scatter plot. We'll use a famous dataset that is used in R a lot for educational purposes. This is the `mtcars` dataset. It stands for _"Motor Trend Car Road Tests"_. See [parameter overview](https://rstudio-pubs-static.s3.amazonaws.com/61800_faea93548c6b49cc91cd0c5ef5059894.html) and [documentation](https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars) for info about the `mtcars` dataset. It is one of many datasets available from base R or tidyverse packages, so we can always call it without having to load it.
 
 First, we will inspect the dataset. For this we will load the tidyverse:
 
@@ -17,7 +17,7 @@ First, we will inspect the dataset. For this we will load the tidyverse:
 library(tidyverse)
 ```
 
-Once tidyverse is loaded via the `library` call, it is loaded in your current session in your browser, so you do not have to load it each time. Next have a look at the full dataset.
+Once tidyverse is loaded via the `library` call, it is available in your current session in your browser, so you do not have to load it each time. Let's have a look at the full dataset:
 
 ``` {webr-r}
 
@@ -70,7 +70,7 @@ mtcars %>%
   
 ```
 
-Next, make a simple plot with the miles per gallon (`mpg`) and dispension parameters (`disp`) in the `mtcars` dataset.
+Next, make a simple plot with the miles per gallon (`mpg`) and displacement parameters (`disp`) in the `mtcars` dataset.
 
 ``` {webr-r}
 
@@ -90,26 +90,27 @@ Add color and bring in a third parameter:
 mtcars %>% 
     #added cyl to the selection here
     select(mpg, disp, cyl) %>% 
-    ggplot(aes(x = mpg, y = disp,
-    #added color to the aesthetics here
-               color = cyl))+ 
-        geom_point(size = 4)
+    ggplot(aes(x = mpg, 
+               y = disp,
+               color = cyl) #added color to the aesthetics here
+               ) + 
+               geom_point(size = 4)
   
 ```
 
-Here we need to have a look at data-types. The `cyl` parameters is a numerical parameter. GGplot automatically assumes we want a continous scale for this. Instead the `cyl` is more of a categorical data type there are either 4, 6 or 8 cylinders in each car so we can make the `cyl` parameter categorical like this:
+Here we need to have a look at data-types. The `cyl` parameter is numerical. `ggplot` automatically assumes we want a continuous scale for this. Instead the `cyl` is more of a categorical data type (there are either 4, 6 or 8 cylinders in each car) so we can explicitly make the `cyl` parameter categorical like this:
 
 ``` {webr-r}
 
 mtcars %>% 
     select(mpg, cyl, disp) %>%
     ggplot(aes(x = mpg, y = disp,
-               color = as.factor(cyl)))+
+               color = as.factor(cyl))) +
         geom_point(size = 4)
   
 ```
 
-If you want to have different color you can use one of the many color pallettes that are available:
+If you want to have different colors you can use one of the many color palettes available:
 
 ``` {webr-r}
 
@@ -133,7 +134,7 @@ mtcars %>%
     ggplot(aes(x = mpg, y = disp,
                color = as.factor(cyl),
 #please note to also add shape to the aesthetics here
-                shape = as.factor(cyl)))+ 
+               shape = as.factor(cyl))) + 
         geom_point(size = 4)+
         scale_color_brewer(name = "cylinders",
                             palette = "Set2")+
@@ -142,7 +143,7 @@ mtcars %>%
   
 ```
 
-GGplot can use different themes for your plots and there are many many options to tweak your plots to the way you like
+`ggplot` can use different themes for your plots, and there are many many options to tweak your plots to the way you like. You can see some examples below:
 
 Let's change titles:
 
@@ -233,7 +234,7 @@ mtcars %>%
         theme_bw(base_size = 20)
 ```
 
-Now we have generated a nice visualisation of our data using `ggplot`. Please note that `ggplot` uses layers and we added each time a different layer of information to the ggplot. If you want you can go wild with ggplot. Please find a nice [overview](https://www.cedricscherer.com/2019/12/30/best-tidytuesday-2019/) of visualisations using ggplot, tidy and R from Cedric Scherer. Also the underlying R code is available for those plots.
+Now we have generated a nice visualisation of our data using `ggplot`. Please note that `ggplot` uses layers and we added each time a different layer of information to the ggplot. If you want you can go wild with `ggplot.` Please find a nice [overview](https://www.cedricscherer.com/2019/12/30/best-tidytuesday-2019/) of visualisations using ggplot, tidy and R from Cedric Scherer. Also the underlying R code is available for those plots.
 
 ## Exercises
 
@@ -334,7 +335,7 @@ mtcars %>%
 ::: {.callout-caution collapse="true"}
 #### Solution to Exercise 2
 
-Please make sure that the ggplot is not separates into groups, if the data is grouped by `color` or `shape` the regression line for each group will be generated.
+Please make sure that the ggplot is not separated into groups. If the data is grouped by `color` or `shape` a different regression line for each group will be generated.
 
 ``` {webr-r}
 mtcars %>% 
@@ -465,7 +466,7 @@ mtcars %>%
         geom_point(size = 4)
 ```
 
-Ggplot layers are added with a `+` not with the `pipe` term.
+`ggplot` layers are added with a `+` not with the `pipe` term.
 :::
 
 ::: callout-important
@@ -498,7 +499,7 @@ Make sure that the end of a layer or line of code is not followed up with a `+` 
 ::: callout-important
 #### Fix error 4
 
-This is an error that is not apparent from an error message that R generates for you. However, the code does not give you what you want. The plot should show the `cyl` parameter in different shapes, just like there are three different colors for each level of the `cyl` parameter.
+Although R doesn't show you an error message, the code does not give you what you want. The plot should show the `cyl` parameter in different shapes, just like there are three different colors for each level of the `cyl` parameter.
 
 ``` {webr-r}
 
@@ -555,7 +556,7 @@ mtcars %>%
 
 ```
 
-chatGPT indeed put the `shape` in the `aes`, but also started making other changed. The remark that chatGPT made was: *"you should correct the syntax error and use scale_shape_manual() instead of scale_shape()."*... *"to customize the shape values and labels."*. I didn't really ask for that, and from there it went all downhill. Let's call that the "chatGPT loop of death". Let's see what happened. 
+chatGPT indeed put the `shape` in the `aes`, but also started making other changes. The remark that chatGPT made was: *"you should correct the syntax error and use scale_shape_manual() instead of scale_shape()."*... *"to customize the shape values and labels."*. I didn't really ask for that, and from there it went all downhill. Let's call that the "chatGPT loop of death". Let's see what happened. 
 
 Running the "improved" code showed that there was still no `fill`, so it did not improve in a way that I wanted.
 
