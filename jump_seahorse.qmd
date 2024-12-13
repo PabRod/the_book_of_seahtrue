@@ -6,7 +6,9 @@ editor:
   mode: source  
 ---
 
-Now, lets plot some Seahorse data. For this we need to import some here into this session. We use a dataset that was we published in Scientific Reports [Janssen et al.](https://www.nature.com/articles/s41598-021-81217-4). It is data from PBMCs where we followed OCR and ECAR using Extracellular Flux analysis with the XFe96 over time and during that time we injected after three measurement phases FCCP, and after six measurement phases we injected Antimycin/Rotenone (AM/Rot). The data is available from [github](https://github.com/vcjdeboer/seahtrue/tree/main/inst/extdata).
+Now, lets plot some Seahorse data. For this we need to import some of it into this session .The data is available from [github](https://github.com/vcjdeboer/seahtrue/tree/main/inst/extdata). 
+
+It is data from PBMCs where we followed OCR and ECAR using Extracellular Flux analysis with the XFe96 over time and during that time we injected after three measurement phases FCCP, and after six measurement phases we injected Antimycin/Rotenone (AM/Rot). Much more context can be found in Scientific Reports [Janssen et al.](https://www.nature.com/articles/s41598-021-81217-4).
 
 ``` {webr-r}
 library(tidyverse)
@@ -31,7 +33,7 @@ xf<-readxl::read_xlsx("VB.xlsx", sheet = "Rate")
 xf %>% glimpse()
 ```
 
-As you can see from the `glimpse`, the data table that we have now (we call it a `tibble` in tidy lanuguage), contains 7 columns; `Measurement`, `Well`, `Group`, `Time`, `OCR`, `ECAR`, `PER`. The data is allready nice and tidyly organized in the Rate sheet of the excel file that we have loaded. The file was generated in the Wave Agilent software and directly comes from exporting the Seahorse data to xlsx.
+As you can see from the `glimpse`, the data table that we have now (called a `tibble` in tidy language), contains 7 columns; `Measurement`, `Well`, `Group`, `Time`, `OCR`, `ECAR`, `PER`. The data is allready nice and tidyly organized in the Rate sheet of the excel file that we have loaded. The file was generated in the Wave Agilent software and directly comes from exporting the Seahorse data to xlsx.
 
 I prefer to use lower case column names without any spaces, so for these column names we have to turn them into lower case first. We use some easy functions from the `janitor` package for this.
 
@@ -40,7 +42,7 @@ webr::install("janitor")
 xf %>% janitor::clean_names()
 ```
 
-Next, we can start plotting data using ggplot. Let's introduce the `filter` command from `dplyr`. Whereas `select` is there to select columns, `filter` is there to select rows. So let's filter the rows for the group with is labeled "200.000" (200.000 cells/per well) and the "Background" group.
+Next, we can start plotting data using `ggplot.` Let's introduce the `filter` command from `dplyr`. Whereas `select` selects columns, `filter` selects rows. So let's filter the rows for the group which is labeled "200.000" (200.000 cells/per well) and the "Background" group.
 
 ``` {webr-r}
 
@@ -54,11 +56,11 @@ xf %>%
 ::: {.callout-note collapse="true"}
 ## The filter command
 
-Filtering data is selecting the rows based on some arguments. You need some to understand some semnatics here. For filtering based on multiple conditions we use `group %in% c("200.000", "Background")`, for filtering based on a single condition we can use `group == "200.000"`. The `%in%` operator is used to match two items.
+Filtering data is selecting the rows based on some arguments. You need some to understand some semantics here. For filtering based on multiple conditions we use `group %in% c("200.000", "Background")`, for filtering based on a single condition we can use `group == "200.000"`. The `%in%` operator is used to match two or more items.
 
 ```{r}
 
-1 %in% c(1,2,3,4,5) #is TRUE
+1 %in% c(1, 2, 3, 4, 5) #is TRUE
 
 ```
 
@@ -80,6 +82,7 @@ c(1,2,3,4,5) %in% 1
 
 1 = 1
 
+#Remember:
 #the = operator is reserved for assignment
 #just like the <- operator
 # == is used for comparison
@@ -127,7 +130,7 @@ xf %>%
   
 ```
 
-That plot is not so informative. Let's make it prettier. First, add a line plot:
+That plot is not very informative. Let's make it prettier. First, add a line plot:
 
 ``` {webr-r}
 
@@ -197,11 +200,17 @@ xf %>%
   
 ```
 
-This is a very nice plot. It shows all OCR curve for each well for the `200.000` and the `background` groups. The information that is now not in the plot is which line matches to which well.
+This is a very nice plot now! It shows all OCR curves for each well for the `200.000` and the `background` groups. The information that is now not in the plot is which line matches to which well.
 
-Exercise We can color each line (but there are too many wells so it will not be nice!). \* Change this in the above code `color = well` instead of `color = group`. \* You will notice that there are not enough colors in the `brewer` palette `Set1`, so you go back to the default coloring by deleting the `scale_color_brewer` line as well. Use th `#` to comment out the line. \* Now notice that the legend is huge and not completely visible, againg indicating that this is not the way to go
+We could consider coloring each line, but there are too many wells so it will not look nice! \*TODO: Change this in the above code `color = well` instead of `color = group`. \* You will notice that there are not enough colors in the `brewer` palette `Set1`, so you go back to the default coloring by deleting the `scale_color_brewer` line as well. Use th `#` to comment out the line. \* Now notice that the legend is huge and not completely visible, againg indicating that this is not the way to go
 
-Instead, we can try to label the lines. The `ggrepel` package is not yet available in webr, so for now we have to use the `geom_text` or `annotate` commands from `ggplot`. The benefit of `ggrepel` is that it automatically prevents text overlap.
+Instead, we can try to label the lines. We'll use the `geom_text` or `annotate` commands from `ggplot`. 
+
+::: {.callout-note collapse="true"}
+### `ggrepel`
+For using plot labels personal R projects, consider using `ggrepel`. Unfortunately, it is not available for webr, but it has the benefit of automatically preventing text overlap. \*TODO: consider removing this note\*
+:::
+
 
 ``` {webr-r}
 
@@ -236,7 +245,7 @@ xf %>%
   
 ```
 
-Although we now labeled lines that are at the minimum and maximum OCR, this is only usefull for this one plot in these conditions. The position of the label is tweaked based on this specific plot, making this not such a quick solution to our problem.
+Although we now labeled lines that are at the minimum and maximum OCR, this is only useful for this one plot in these conditions. The position of the label is tweaked based on this specific plot, making this not such a quick solution to our problem.
 
 
 
@@ -267,7 +276,7 @@ Thus here we are filtering all the way to getting only one row of the full datas
 
 Let's do some more layout adjustments. Although the `theme_bw` gives a basic plotting layout, we often want to change the formatting. There are again great resources for this, for example this one: <https://ggplot2.tidyverse.org/articles/faq-customising.html>, but we explain the basics here. By giving options to the `theme` function we can change specific elements of a ggplot.
 
-For example, if we want to change the text size of the axis title (or leave it blank), we give arguments to the `axis.title` options. Also please note the `rel(1.2)` argument which means `relative 1.2 times higher than base_size`. I think it is good practive to use the `rel` here instead of absolute numbers.
+For example, if we want to change the text size of the axis title (or leave it blank), we give arguments to the `axis.title` options. Also please note the `rel(1.2)` argument which means `relative 1.2 times higher than base_size`. I think it is good practice to use the `rel` here instead of absolute numbers.
 
 ``` {webr-r}
 xf %>% 
@@ -288,7 +297,7 @@ xf %>%
 
 Change the rel `1.2` to `0.5` in the above code and see what happens.
 
-Next, we change the grid lines
+Next, we change the grid lines:
 
 ``` {webr-r}
 xf %>% 
@@ -329,10 +338,10 @@ xf %>%
 
 ```
 
-
-We can also try to use the `ggiraph` package. This brings in some nice interactivity into the plot. Since we are now working with the plot in a browser, this can be very handy. Also if we want to publish the plot as html and not a plain PDF this can be usefull. `ggiraph` is unfortunately also not available for wasm/webr since one dependent package is not available `uuid`, and I also can't get it to run via quarto.....
-
-So let's try something else in a couple of exercises.
+::: {.callout-note collapse="true"}
+### `ggiraph`
+`ggiraph` is another interesting package. This brings in some nice interactivity into the plot. Since we are now working with the plot in a browser, this can be very handy. This can also be useful if we want to publish the plot as html and not a plain PDF. `ggiraph` is unfortunately also not available for wasm/webr since one dependent package is not available `uuid`, and I also can't get it to run via quarto. \*TODO: consider removing this note\*
+:::
 
 ::: callout-tip
 #### Exercise 1
@@ -385,7 +394,7 @@ xf %>%
 ::: callout-tip
 #### Exercise 2
 
-Now add the injection labels. Use the `annotate` command and
+Now add the injection labels. Use the `annotate` command and \*TODO: something seems to be missing here\*
 
 ``` {webr-r}
 
@@ -450,7 +459,7 @@ xf %>%
 ::: callout-tip
 #### Exercise 3
 
-Use the `facet_wrap` command to plot all groups (except background) in separate plots and in each plot show the wells. First, we will need to filter away the background data. Instead of selecting all groups we need it is better and easier to this filter our the background data using `filter(group != "Background")`. The `!=` means "is not" this is the reverse of the `==` operator.
+Use the `facet_wrap` command to plot all groups (except background) in separate plots and in each plot show the wells. First, we will need to filter away the background data. Instead of selecting all groups we need it is better and easier to this filter our the background data using `filter(group != "Background")`. The `!=` means "is not", and it is the inverse of the `==` operator.
 
 Next, add the `facet_wrap` command to the ggplot. I prefer to do that always at the bottom, so that I can easily see if a plot is wrapped.
 
@@ -503,9 +512,9 @@ xf %>%
 ::: callout-tip
 #### Exercise 4
 
-The plot in exercise 3 looks great allready, but the order of the plots is important! We would like to see it go from low to high OCR. We can fix that using the `forcats` package commands. A nice and quick way to sort is based on the name of the group. Important to realize is that the `Group` column in the `XF` data are characters and not numbers. That is also the reason why that does not sort in the most natural way. It is sorted based on the first character, thus the "50.000" group comes last. If we would change the "group" column to `double` (that is a number format), it would sort better, but also your group name will change because it will recognize the `.` as a decimal operator. So it is better to leave the group names as they are and do it differently.
+The plot in exercise 3 looks great already, but the order of the plots is important! We would like to see it go from low to high OCR. We can fix that using the `forcats` package commands. A nice and quick way to sort is based on the name of the group. It is important to realize that the `Group` column in the `XF` data are characters and not numbers. That is also the reason why it doesn't get sorted in the most natural way. It is sorted based on the first character, thus the "50.000" group comes last. If we would change the "group" column to `double` (that is a number format), it would sort better, but also your group name will change because it will recognize the `.` as a decimal operator. So it is better to leave the group names as they are and do it differently.
 
-In comes `forcats`, you can relevel and reorder the crap out of your data in the ggplot! We often do the releveling at the point where you use your parameter, without making any changes the type of the columns. So that means you can use `~fct_reorder(group, group)` in the `facet_wrap` instead of only `~group`.
+In comes `forcats`, you can re-level and reorder the crap out of your data in the ggplot! We often do the releveling at the point where you use your parameter, without making any changes the type of the columns. So that means you can use `~fct_reorder(group, group)` in the `facet_wrap` instead of only `~group`.
 
 Please note that `fct_reorder` first argument is the parameter that you plot or need, and the second argument is the parameter that is used for sorting the data. In our case now that is the same, both are "group", but we also need to add something else. If we would do it like this there will be no difference from when ggplot takes facet_wrap only takes `~group`. Thus we can make the second argument into a number by using `as.double`.
 
@@ -531,7 +540,11 @@ xf %>%
     #sort by number using fct_reorder and as.double
 ```
 
-Also, try in the above code what happens if you: - only use `as.double` in the facet_wrap - change the type of data to `double` for the group column
+Also, try what happens in the above code if you: 
+
+- only use `as.double` in the facet_wrap 
+- change the type of data to `double` for the group column
+
 :::
 
 ::: {.callout-caution collapse="true"}
@@ -585,7 +598,7 @@ xf %>%
 
 ```
 
-If you didn't allready change the title of the legend, do that as well. You can specify the name of the legend manually using the `name` argument in the `scale_color_brewer` command.
+If you didn't already change the title of the legend, do that as well. You can specify the name of the legend manually using the `name` argument in the `scale_color_brewer` command.
 :::
 
 ::: {.callout-caution collapse="true"}
@@ -795,7 +808,7 @@ xf %>%
 
 ```
 
-Observe also what the difference is when only using the data from row A and H. You can uncomment the line in the above code. Please note I use the very usefull `str_detect` function for this from the `stringr` package that is also in the `tidyverse`.
+Observe also what the difference is when only using the data from rows A and H. You can uncomment the line in the above code. Please note I use the very useful `str_detect` function for this from the `stringr` package that is also part of the `tidyverse`.
 :::
 
 ::: callout-tip
